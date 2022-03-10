@@ -1,7 +1,7 @@
 const initialState = {
   user:{
-      name:null,
-      email:'contact20@freshdesk.com'
+      name: 'User',
+      email:'contact10@freshdesk.com'
   },
   tickets: [],
   filterList: [],

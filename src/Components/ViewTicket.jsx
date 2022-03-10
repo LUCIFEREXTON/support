@@ -1,10 +1,24 @@
 import axios from "axios";
 import { useState, useEffect } from 'react'
 import { useSelector } from "react-redux";
+import ConversationGroup from "./ConversationGroup";
 
 const Viewticket = () =>{
   const id = useSelector( state => state.selectedTicketId )
   const [ticket, setticket] = useState({})
+  const [conversationList, setConversationList] = useState([]);
+  
+  const statusChangeHandler = (status) => {
+      axios.put(`/tickets/${id}`, { status })
+      .then(res => setticket({...res.data}))
+      .catch(error => console.log(error));
+  }
+
+  const fetchConversation = () => {
+    axios.get(`/tickets/${id}/conversations`)
+    .then(res => setConversationList([...res.data]))
+    .catch(error => console.log(error));
+  }
 
   let statusValue = ''
   if( ticket.status === 5 ){
@@ -13,17 +27,26 @@ const Viewticket = () =>{
     statusValue =  <span className="badge bg-green pull-left">Status Open</span>
   }
 
+  let statusChangeButton = ''
+  if( ticket.status === 5 ){
+    statusChangeButton =  <button type="button" className="btn btn-sm bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(2)}>Reopen Ticket</button>
+  }else{
+    statusChangeButton =  <button type="button" className="btn btn-sm bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(5)}>Close Ticket</button>
+  }
+
   useEffect(() => {
     (
       async () => {
         try {
           const res = await axios.get(`/tickets/${id}`)
-          setticket({...res.data})  
+          setticket({...res.data})
         } catch (error) {
           console.log(error)
         }
       }
     )()
+
+    fetchConversation();
 
   },[id])
 
@@ -36,7 +59,7 @@ const Viewticket = () =>{
               <button type="button" className="close" data-dismiss="modal" aria-hidden="true">×</button>
               <h4 className="modal-title"><i className="fa fa-cog"></i> {ticket.subject}</h4>
                 {statusValue}
-                <button type="button" className="btn btn-sm bg-secondry-bv text-light pull-right">Close Ticket</button>
+                {statusChangeButton}
             </div>
             <form action='#' method='post'>
               <div className='modal-body'>
@@ -49,16 +72,7 @@ const Viewticket = () =>{
                     <p>{ticket.description_text}</p>
                   </div>
                 </div>
-                <div className='row support-content-comment'>
-                  <div className='col-md-2'>
-                    <img src='assets/img/user/avatar02.png' className='img-circle' alt='' width='50'/>
-                  </div>
-                  <div className='col-md-10'>
-                    <p>Posted by <a href='#'>ehernandez</a> on 16/06/2014 at 14:12</p>
-                    <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                    <a href='#'><span className='fa fa-reply'></span> &nbsp;Post a reply</a>
-                  </div>
-                </div>
+                <ConversationGroup user_id={ticket.requester_id} conversationList={conversationList} />
               </div>
               <div className='modal-footer'>
                 <button type='button' className='btn btn-default' data-dismiss='modal'><i className='fa fa-times'></i> Close</button>
