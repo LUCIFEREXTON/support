@@ -14,9 +14,6 @@ const TicketCreation = () =>{
                   <input name="subject" type="text" className="form-control" placeholder="Subject"/>
                 </div>
                 <div className="form-group">
-                  <input name="department" type="text" className="form-control" placeholder="Department"/>
-                </div>
-                <div className="form-group">
                   <textarea name="message" className="form-control" placeholder="Please detail your issue or question" style={{height: '120px'}} />
                 </div>
                 <div className="form-group">
