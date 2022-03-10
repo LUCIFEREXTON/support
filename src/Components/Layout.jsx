@@ -1,11 +1,11 @@
 const Layout = ({children}) =>{
   return(
-    <div class="container">
-			<section class="content">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="grid support-content">
-							<div class="grid-body">
+    <div className="container">
+			<section className="content">
+				<div className="row">
+					<div className="col-md-12">
+						<div className="grid support-content">
+							<div className="grid-body">
                 {children}
 							</div>
 						</div>

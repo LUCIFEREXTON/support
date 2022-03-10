@@ -1,7 +1,7 @@
 import ListItem from "./ListItem"
 const ListGroup = ()=>{
   return (
-    <ul class="list-group fa-padding">
+    <ul className="list-group fa-padding">
       <ListItem/>
       <ListItem/>
       <ListItem/>

@@ -2,9 +2,9 @@ import ListGroup from './ListGroup'
 import ViewTicket from './ViewTicket'
 const AllTickets = () =>{
   return(
-    <><div class="padding"></div>
-			<div class="row">				
-      <div class="col-md-12">
+    <><div className="padding"></div>
+			<div className="row">				
+      <div className="col-md-12">
         <ListGroup />												
         <ViewTicket />					
       </div>				
