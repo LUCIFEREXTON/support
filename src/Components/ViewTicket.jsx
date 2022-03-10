@@ -6,7 +6,9 @@ const Viewticket = () =>{
           <div className="modal-content">
             <div className="modal-header bg-blue">
               <button type="button" className="close" data-dismiss="modal" aria-hidden="true">×</button>
-              <h4 className="modal-title"><i className="fa fa-cog"></i> Add drag and drop config import closes</h4>
+              <h4 className="modal-title"><i className="fa fa-cog"></i> Ticket Subject</h4>
+                <span className="badge bg-green pull-left">Status Open</span>
+                <button type="button" className="btn btn-sm bg-secondry-bv text-light pull-right">Close Ticket</button>
             </div>
             <form action="#" method="post">
               <div className="modal-body">
