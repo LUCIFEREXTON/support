@@ -1,19 +1,62 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
 const Filter = () =>{
-  const [filterStatus, setFilterStatus] = useState(0)
+  const [filteredtickets, setfilteredtickets] = useState([]);
+  const [filterStatus, setFilterStatus] = useState(0);
+  const dispatch = useDispatch()
+
+  const { tickets, opentickets, closetickets } = useSelector( state => {
+    return {
+      tickets: [...state.tickets],
+      opentickets: state.opentickets, 
+      closetickets: state.closetickets
+    }
+  })
+
   const changefilter = e => {
-    if(e.target.dataset.status === filterStatus)
+    if(e.target.dataset.status === filterStatus){
       setFilterStatus(0)
-    else
+      setfilteredtickets([...tickets])
+    }
+    else{
       setFilterStatus(e.target.dataset.status)
+      if(e.target.dataset.status === '1'){
+        setfilteredtickets([...tickets.filter(ticket => ticket.status!=='5')])
+      }else{
+        setfilteredtickets([...tickets.filter(ticket => ticket.status==='5')])
+      }
+    }
   }
+  useEffect(() => {
+    dispatch({
+      type:'CHANGE_FILTER_LIST', 
+      filterList: filteredtickets
+    })
+
+  }, [filteredtickets, dispatch])
   return(
     <>
       <h2>Issues</h2>   
         <hr/>
         <div className='btn-group'>
-          <button type='button' data-status='1' className={`btn btn-default${filterStatus==='1'?' active':''}`} onClick={changefilter}>162 Open</button>
-          <button type='button' data-status='2' className={`btn btn-default${filterStatus==='2'?' active':''}`} onClick={changefilter}>95,721 Closed</button>
+          <button 
+              type='button' 
+              data-status='1' 
+              className={`btn btn-default${filterStatus==='1'?' active':''}`} 
+              onClick={changefilter}
+          >
+            {parseInt(opentickets)} Opened
+          </button>
+
+          <button 
+            type='button' 
+            data-status='2' 
+            className={`btn btn-default${filterStatus==='2'?' active':''}`} 
+            onClick={changefilter}
+          >
+            {parseInt(closetickets)} Closed
+          </button>
         </div>
         <div className='btn-group'>
           <button type='button' className='btn btn-default dropdown-toggle' data-toggle='dropdown'>
@@ -30,6 +73,5 @@ const Filter = () =>{
     </>
   );
 }
-
 
 export default Filter;
