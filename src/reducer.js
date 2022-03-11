@@ -7,7 +7,8 @@ const initialState = {
   filterList: [],
   total: 0,
   opentickets: 0,
-  closetickets: 0,
+	closetickets: 0,
+	selectedTicketId: null,
   conversationList: []
 }
 
@@ -16,24 +17,43 @@ const ticket_open_status = [2, 3, 4]
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case 'UPDATE_TICKETS':{
-      
-      let open = 0, closed = 0; 
+      let open = 0 
       const total = action.tickets.reduce((total, ticket)=>{
-        console.log(ticket_open_status.includes( ticket.status ))
         if(ticket_open_status.includes( ticket.status )) 
           open++;
-        else
-          closed++
         return total + 1
       }, 0)
-      console.log(open, closed, total)
       return {
         ...state,
         total,
         tickets : [...action.tickets],
         filterList: [...action.tickets],
-        opentickets: open,
-        closeticket: closed
+        opentickets: open
+      }
+    }
+    case 'CREATE_TICKET':{
+      return {
+        ...state,
+        tickets : [action.ticket, ...state.tickets],
+        filterList: [action.ticket, ...state.filterList],
+        opentickets: state.opentickets+1,
+        total: state.opentotal+1,
+      }
+    }
+    case 'UPDATE_STATUS':{
+      if( action.ticket.status === 5){
+        return {
+          ...state,
+          tickets: [action.ticket, ...state.tickets.filter(ticket => ticket.id !== action.ticket.id)],
+          filterList: [...state.filterList.filter(ticket => ticket.id !== action.ticket.id)],
+          opentickets: state.opentickets - 1
+        }
+      }
+      return {
+        ...state,
+        tickets: [action.ticket, ...state.tickets.filter(ticket => ticket.id !== action.ticket.id)],
+        filterList: [action.ticket, ...state.filterList.filter(ticket => ticket.id !== action.ticket.id)],
+        opentickets: state.opentickets + 1
       }
     }
     case 'CHANGE_FILTER_LIST':{

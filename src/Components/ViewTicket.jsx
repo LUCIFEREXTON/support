@@ -2,8 +2,10 @@ import axios from "axios";
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import ConversationGroup from "./ConversationGroup";
+import { formatDate } from '../helperFunction'
 
 const Viewticket = () =>{
+  const [openreply, setopenreply] = useState(false)
   const id = useSelector( state => state.selectedTicketId )
   const [ticket, setticket] = useState({})
   const [reply, changeReply] = useState('');
@@ -11,8 +13,9 @@ const Viewticket = () =>{
   let tickets = useSelector( state => state.tickets);
   const dispatch = useDispatch();
   
+
   const updateStatusOfTicket = (ticket) => {
-    tickets.map(currentTicket => (currentTicket.id === ticket.id ? Object.assign(currentTicket, ticket) : currentTicket));
+    
     dispatch({type:'UPDATE_TICKETS', tickets});
   }
 
@@ -20,7 +23,7 @@ const Viewticket = () =>{
       axios.put(`/tickets/${id}`, { status })
       .then(res => {
         setticket({...res.data});
-        updateStatusOfTicket(res.data);
+        dispatch({type:'UPDATE_STATUS', ticket: res.data});
       })
       .catch(error => console.log(error));
   }
@@ -37,7 +40,11 @@ const Viewticket = () =>{
 
   const onReplySubmit = () => {
       axios.post(`/tickets/${id}/reply_to_forward`, { body: reply, to_emails: ["support@utkarsh-help.freshdesk.com"], user_id: ticket.requester_id})
-      .then(res => dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...conversationList, res.data]}))
+      .then(res => {
+        dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...conversationList, res.data]})
+        setopenreply(false)
+        changeReply('')
+      })
       .catch(error => console.log(error));
   }
 
@@ -90,19 +97,21 @@ const Viewticket = () =>{
                   <img src='assets/img/user/avatar01.png' className='img-circle' alt='' width='50'/>
                 </div>
                 <div className='col-md-10'>
-                  <p>Issue <strong>#{ticket.id}</strong> Raised On: {ticket.created_at} | Updated At: {ticket.updated_at}</p>
+                  <p>Issue <strong>#{ticket.id}</strong> Raised On: {formatDate(new Date(ticket.created_at))} | Updated At: {formatDate(new Date(ticket.updated_at))}</p>
                   <p>{ticket.description_text}</p>
                 </div>
               </div>
               <ConversationGroup user_id={ticket.requester_id} conversationList={conversationList} />
-              <div class="row">
-                {/* <a href='#'><span className='fa fa-reply'></span> &nbsp;Post a reply</a> */}
-                <div className="form-group">
-                  <textarea name="reply" className="form-control" placeholder="Write Reply" style={{height: '120px'}} onChange={onReplyChange}/>
+              <div className="row">
+
+                <div style={{cursor:'pointer'}} onClick={()=>{setopenreply(!openreply);changeReply('');}}><span className='fa fa-reply'></span> &nbsp;{openreply?'Cancel reply':'Post a reply'}</div>
+
+                <div style={{display: openreply ? 'block': 'none'}}>  
+                  <div className="form-group">
+                    <textarea name="reply" className="form-control" placeholder="Write Reply" style={{height: '120px'}} onChange={onReplyChange} value={reply}/>
+                  </div>
+                  <button type="submit" className="btn btn-primary text-left btn-reply" onClick={onReplySubmit}>Reply</button>
                 </div>
-                {/* <div class="col-sm-2"> */}
-                  <button type="submit" class="btn btn-primary text-left btn-reply" onClick={onReplySubmit}>Reply</button>
-                {/* </div> */}
               </div>
             </div>
 

@@ -18,8 +18,7 @@ const TicketCreation = ({ email }) =>{
   const onTicketCreate = () => {
     axios.post(`/tickets`, { subject, description, email, priority: 1, status: 2 })
       .then(res => {
-        console.log(res.data);
-        dispatch({type:'UPDATE_TICKETS', tickets: [...tickets,res.data]})
+        dispatch({type:'CREATE_TICKET', ticket: res.data})
       })
       .catch(error => console.log(error));
   }

@@ -4,13 +4,15 @@ import { useSelector, useDispatch } from "react-redux";
 const Filter = () =>{
   const [filteredtickets, setfilteredtickets] = useState([]);
   const [filterStatus, setFilterStatus] = useState('2');
+  const [selectedtype, setselectedtype] = useState('Recently updated')
   const dispatch = useDispatch()
 
-  const { tickets, opentickets, closetickets } = useSelector( state => {
+  const { tickets, filtered, opentickets, total } = useSelector( state => {
     return {
       tickets: [...state.tickets],
+      filtered: [...state.filterList],
       opentickets: state.opentickets, 
-      closetickets: state.closetickets
+      total: state.total
     }
   })
 
@@ -25,7 +27,22 @@ const Filter = () =>{
 		setFilterStatus(e.target.dataset.status)
   }
 
-	const sorting= (sortType) => {
+	const sorting = (e) => {
+    if( e.target.dataset.type === selectedtype ) return
+    switch(e.target.dataset.type){
+      case 'Newest':{
+        filtered.sort((a, b)=> new Date(b.created_at) - new Date(a.created_at))
+        setfilteredtickets([...filtered])
+        setselectedtype('Newest')
+        break
+      }
+      case 'Recently updated':{
+        setfilteredtickets([...filtered])
+        setselectedtype('Recently updated')
+        break
+      }
+      default: return
+    }
 	}
 
 	useEffect(() => {
@@ -56,17 +73,16 @@ const Filter = () =>{
             className={`btn btn-default${filterStatus==='2'?' active':''}`} 
             onClick={changefilter}
           >
-            {parseInt(closetickets)} All
+            {parseInt(total)} All
           </button>
         </div>
         <div className='btn-group'>
           <button type='button' className='btn btn-default dropdown-toggle' data-toggle='dropdown'>
-            Sort: <strong>Newest</strong> <span className='caret'></span>
+            Sort: <strong>{selectedtype}</strong> <span className='caret'></span>
           </button>
           <ul className='dropdown-menu fa-padding' role='menu'>
-            <li className='filter-item'><i className='fa fa-check'></i> Newest</li>
-            <li className='filter-item'><i className='fa'> </i> Recently updated</li>
-            <li className='filter-item'><i className='fa'> </i> Least recently updated</li>
+            <li data-type='Newest' className='filter-item' onClick={sorting}><i className={`fa${selectedtype === 'Newest'?' fa-check':''}`}></i> Newest</li>
+            <li data-type='Recently updated' className='filter-item' onClick={sorting}><i className={`fa${selectedtype === 'Recently updated'?' fa-check':''}`}> </i> Recently updated</li>
           </ul>
       </div>
       <button type='button' className='btn bg-secondry-bv text-light pull-right' data-toggle='modal' data-target='#newIssue'>New Issue</button>
