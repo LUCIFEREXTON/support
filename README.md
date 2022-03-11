@@ -1,3 +1,3 @@
-add .env file root folder<br/>
+add .env file in root folder<br/>
 add REACT_APP_FRESHDESK_BASE_URL<br/>
 add REACT_APP_FRESHDESK_API_KEY<br/>
