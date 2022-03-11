@@ -84,8 +84,8 @@ background:#eee;
 
 .grid .grid-body {
 	padding: 15px 20px 15px 20px;
-	font-size: 0.9em;
-	line-height: 1.9em;
+	font-size: 1.3em;
+	line-height: 1.2em;
 }
 
 .grid .full {
@@ -320,4 +320,13 @@ background:#eee;
 }
 .text-light{
   color: #ffffff !important;
+}
+
+/*Custom css*/
+ 
+.filter-item{
+	display: block; 
+	padding: 3px 20px; 
+	white-space: nowrap;
+	cursor: pointer;
 }

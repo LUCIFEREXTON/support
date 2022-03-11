@@ -13,8 +13,7 @@ const MainPage = () =>{
 
 	const gettickets = useCallback(async()=>{
 		try {
-			const res = await axios.get(`/tickets?email=${requester_email}`)
-			console.log(res.data)
+			const res = await axios.get(`/tickets?order_by=updated_at&email=${requester_email}`)
 			dispatch({type:'UPDATE_TICKETS', tickets: [...res.data]})
 		} catch (error) {
 			console.log(error)
