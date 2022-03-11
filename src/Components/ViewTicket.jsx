@@ -6,6 +6,7 @@ import ConversationGroup from "./ConversationGroup";
 const Viewticket = () =>{
   const id = useSelector( state => state.selectedTicketId )
   const [ticket, setticket] = useState({})
+  const [reply, changeReply] = useState('');
   let conversationList = useSelector(state => state.conversationList);
   let tickets = useSelector( state => state.tickets);
   const dispatch = useDispatch();
@@ -28,6 +29,16 @@ const Viewticket = () =>{
     axios.get(`/tickets/${id}/conversations`)
     .then(res => dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...res.data]}))
     .catch(error => console.log(error));
+  }
+
+  const onReplyChange = event => {
+    changeReply(event.target.value);
+  }
+
+  const onReplySubmit = () => {
+      axios.post(`/tickets/${id}/reply_to_forward`, { body: reply, to_emails: ["support@utkarsh-help.freshdesk.com"], user_id: ticket.requester_id})
+      .then(res => dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...conversationList, res.data]}))
+      .catch(error => console.log(error));
   }
 
   let statusValue = ''
@@ -73,23 +84,31 @@ const Viewticket = () =>{
                 {statusValue}
                 {statusChangeButton}
             </div>
-            <form action='#' method='post'>
-              <div className='modal-body'>
-                <div className='row'>
-                  <div className='col-md-2'>
-                    <img src='assets/img/user/avatar01.png' className='img-circle' alt='' width='50'/>
-                  </div>
-                  <div className='col-md-10'>
-                    <p>Issue <strong>#{ticket.id}</strong> Raised On: {ticket.created_at} | Updated At: {ticket.updated_at}</p>
-                    <p>{ticket.description_text}</p>
-                  </div>
+            <div className='modal-body'>
+              <div className='row'>
+                <div className='col-md-2'>
+                  <img src='assets/img/user/avatar01.png' className='img-circle' alt='' width='50'/>
                 </div>
-                <ConversationGroup user_id={ticket.requester_id} conversationList={conversationList} />
+                <div className='col-md-10'>
+                  <p>Issue <strong>#{ticket.id}</strong> Raised On: {ticket.created_at} | Updated At: {ticket.updated_at}</p>
+                  <p>{ticket.description_text}</p>
+                </div>
               </div>
-              <div className='modal-footer'>
-                <button type='button' className='btn btn-default' data-dismiss='modal'><i className='fa fa-times'></i> Close</button>
+              <ConversationGroup user_id={ticket.requester_id} conversationList={conversationList} />
+              <div class="row">
+                {/* <a href='#'><span className='fa fa-reply'></span> &nbsp;Post a reply</a> */}
+                <div className="form-group">
+                  <textarea name="reply" className="form-control" placeholder="Write Reply" style={{height: '120px'}} onChange={onReplyChange}/>
+                </div>
+                {/* <div class="col-sm-2"> */}
+                  <button type="submit" class="btn btn-primary text-left btn-reply" onClick={onReplySubmit}>Reply</button>
+                {/* </div> */}
               </div>
-            </form>
+            </div>
+
+            <div className='modal-footer'>
+              <button type='button' className='btn btn-default' data-dismiss='modal'><i className='fa fa-times'></i> Close</button>
+            </div>
           </div>
         </div>
       </div>
