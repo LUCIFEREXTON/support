@@ -8,6 +8,7 @@ const initialState = {
   total: 0,
   opentickets: 0,
   closetickets: 0,
+  conversationList: []
 }
 
 const ticket_open_status = [2, 3, 4]
@@ -45,6 +46,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         selectedTicketId : action.id
+      }
+    }
+    case 'UPDATE_CONVERSATIONS':{
+      return {
+        ...state,
+        conversationList: action.conversationList
       }
     }
     default:

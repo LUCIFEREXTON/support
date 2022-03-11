@@ -1,22 +1,32 @@
 import axios from "axios";
 import { useState, useEffect } from 'react'
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import ConversationGroup from "./ConversationGroup";
 
 const Viewticket = () =>{
   const id = useSelector( state => state.selectedTicketId )
   const [ticket, setticket] = useState({})
-  const [conversationList, setConversationList] = useState([]);
+  let conversationList = useSelector(state => state.conversationList);
+  let tickets = useSelector( state => state.tickets);
+  const dispatch = useDispatch();
   
+  const updateStatusOfTicket = (ticket) => {
+    tickets.map(currentTicket => (currentTicket.id === ticket.id ? Object.assign(currentTicket, ticket) : currentTicket));
+    dispatch({type:'UPDATE_TICKETS', tickets});
+  }
+
   const statusChangeHandler = (status) => {
       axios.put(`/tickets/${id}`, { status })
-      .then(res => setticket({...res.data}))
+      .then(res => {
+        setticket({...res.data});
+        updateStatusOfTicket(res.data);
+      })
       .catch(error => console.log(error));
   }
 
   const fetchConversation = () => {
     axios.get(`/tickets/${id}/conversations`)
-    .then(res => setConversationList([...res.data]))
+    .then(res => dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...res.data]}))
     .catch(error => console.log(error));
   }
 
@@ -35,18 +45,20 @@ const Viewticket = () =>{
   }
 
   useEffect(() => {
-    (
-      async () => {
-        try {
-          const res = await axios.get(`/tickets/${id}`)
-          setticket({...res.data})
-        } catch (error) {
-          console.log(error)
+    if (id) {
+      (
+        async () => {
+          try {
+            const res = await axios.get(`/tickets/${id}`)
+            setticket({...res.data})
+          } catch (error) {
+            console.log(error)
+          }
         }
-      }
-    )()
+      )()
 
-    fetchConversation();
+      fetchConversation();
+    }
 
   },[id])
 
