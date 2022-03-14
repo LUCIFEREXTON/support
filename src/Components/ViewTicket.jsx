@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import ConversationGroup from "./ConversationGroup";
 import { formatDate } from '../helperFunction'
+import parse from 'html-react-parser';
+
 
 const Viewticket = () =>{
   const [openreply, setopenreply] = useState(false)
@@ -11,6 +13,7 @@ const Viewticket = () =>{
   const [reply, changeReply] = useState('');
   let conversationList = useSelector(state => state.conversationList);
   let tickets = useSelector( state => state.tickets);
+  let user = useSelector( state => state.user);
   const dispatch = useDispatch();
   
 
@@ -80,38 +83,56 @@ const Viewticket = () =>{
 
   },[id])
 
+  console.log(ticket.description  || ticket?.description_text)
+
   return(
     <div className="modal fade" id="issue" tabIndex="-1" role="dialog" aria-labelledby="issue" aria-hidden="true">
       <div className="modal-wrapper">
-        <div className="modal-dialog">
+        <div className="modal-dialog modal-lg">
           <div className="modal-content">
-            <div className="modal-header bg-blue">
-              <button type="button" className="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <div className="modal-header bg-primary-bv text-light">
+              <button type="button" className="close text-light" data-dismiss="modal" aria-hidden="true">×</button>
               <h4 className="modal-title"><i className="fa fa-cog"></i> {ticket.subject}</h4>
+								 #{ticket?.id}
                 {statusValue}
                 {statusChangeButton}
             </div>
             <div className='modal-body'>
+
+            <div className='conversation user'>
               <div className='row'>
-                <div className='col-md-2'>
-                  <img src='assets/img/user/avatar01.png' className='img-circle' alt='' width='50'/>
+                <div className='col-xs 1 col-md-1 icon'>
+                  {user.name[0]}
                 </div>
-                <div className='col-md-10'>
-                  <p>Issue <strong>#{ticket.id}</strong> Raised On: {formatDate(new Date(ticket.created_at))} | Updated At: {formatDate(new Date(ticket.updated_at))}</p>
-                  <p>{ticket.description_text}</p>
+                <div className='col-sm-11 col-md-11'>
+                  <div className='row responder'>
+                   Ticket Raised by You
+                  </div>
+                  <div className='row date'>
+                    Raised On: {formatDate(ticket?.created_at)} | Last Activity: {formatDate(ticket?.updated_at)}
+                  </div>
                 </div>
               </div>
+              <div className='row'>
+                <div className='col-sm-1 col-md-1 align-self-baseline'>
+                  <i className="fa fa-envelope-o" aria-hidden="true"></i>
+                </div>
+                <div>
+                  {ticket?.description && parse(ticket?.description)}
+                </div>	
+              </div>
+            </div>
               <ConversationGroup user_id={ticket.requester_id} conversationList={conversationList} />
               <div className="row">
 
                 <div style={{cursor:'pointer'}} onClick={()=>{setopenreply(!openreply);changeReply('');}}><span className='fa fa-reply'></span> &nbsp;{openreply?'Cancel reply':'Post a reply'}</div>
-
-                <div style={{display: openreply ? 'block': 'none'}}>  
+                {openreply &&
+                <div>  
                   <div className="form-group">
                     <textarea name="reply" className="form-control" placeholder="Write Reply" style={{height: '120px'}} onChange={onReplyChange} value={reply}/>
                   </div>
                   <button type="submit" className="btn btn-primary text-left btn-reply" onClick={onReplySubmit}>Reply</button>
-                </div>
+                </div>}
               </div>
             </div>
 

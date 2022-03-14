@@ -1,4 +1,5 @@
-export const formatDate = date => {
+export const formatDate = rawDate => {
+  const date = new Date(rawDate)
   let diff = new Date() - date; // the difference in milliseconds
 
   if (diff < 1000) { // less than 1 second
