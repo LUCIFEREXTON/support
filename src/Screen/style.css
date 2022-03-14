@@ -330,3 +330,69 @@ background:#eee;
 	white-space: nowrap;
 	cursor: pointer;
 }
+
+div{
+/*	border-radius: 5px !important;*/
+}
+
+.support-content-comment {
+	display: flex;
+  flex-direction: column-reverse;
+	padding: 0px;
+	background: none;
+	max-height: 60vh;
+	overflow-y: scroll;
+}
+
+.icon{
+	align-self: baseline;
+	width: 5%;
+	background-color: darkseagreen;
+	color: darkgreen;
+	font-weight: bold;
+	text-transform: capitalize;
+	border-radius: 50%;
+	line-height: 200%;
+	justify-self: center;
+	aspect-ratio: 1/1;
+}
+
+.support{
+	background: antiquewhite;
+}
+
+.user{
+	background: aliceblue;
+}
+
+.conversation{
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+	margin-bottom: 15px;
+	padding: 10px;
+	border-radius: 15px;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+}
+
+.conversation .row{
+	display: flex;
+	margin: unset;
+}
+
+.responder{
+	font-weight: bold;
+}
+
+.date{
+	font-size: small;
+}
+
+.mailid{
+	font-size: 12px;
+	font-weight: 300;
+}
+
+.modal-body{
+	margin: 15px;
+}
