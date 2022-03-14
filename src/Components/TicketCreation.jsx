@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 const TicketCreation = ({ email }) =>{
   const [subject, changeSubject] = useState('');
   const [description, changeDescription] = useState('');
+  const [files, changeFiles] = useState([]);
   let tickets = useSelector( state => state.tickets)
 	const dispatch = useDispatch()
   const onSubjectChange = event => {
@@ -15,8 +16,23 @@ const TicketCreation = ({ email }) =>{
     changeDescription(event.target.value);
   }
 
+  const onFilesChange = event => {
+    changeFiles([...event.target.files]);
+  }
+
   const onTicketCreate = () => {
-    axios.post(`/tickets`, { subject, description, email, priority: 1, status: 2 })
+    let formData = new FormData();
+    formData.append( "subject", subject);
+    formData.append("description", description);
+    formData.append("email", email);
+    formData.append("priority", 1);
+    formData.append("status", 2);
+    files.forEach(file => formData.append("attachments[]",file));
+    axios.post(`/tickets`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
       .then(res => {
         dispatch({type:'CREATE_TICKET', ticket: res.data})
       })
@@ -38,8 +54,20 @@ const TicketCreation = ({ email }) =>{
               <div className="form-group">
                 <textarea name="message" className="form-control" placeholder="Please detail your issue or question" style={{height: '120px'}} onChange={onDescriptionChange}/>
               </div>
-              <div className='form-group'>
-                <input type='file' name='attachment'/>
+              <div className="mb-3 form-group">
+                <label className="form-label">Upload Attachments</label>
+                <input 
+                  id="input-b3" 
+                  name="input-b3[]" 
+                  type="file" 
+                  className="file" 
+                  multiple
+                  data-show-preview="false" 
+                  data-show-upload="false" 
+                  data-show-caption="true" 
+                  data-msg-placeholder="Select {files} for upload..."
+                  onChange={onFilesChange} 
+                />
               </div>
             </div>
             <div className='modal-footer'>
