@@ -6,6 +6,9 @@ import TicketCreation from '../Components/TicketCreation';
 import Filter from '../Components/Filter';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
+import { Routes, Route } from "react-router-dom";
+import CreateTicket from './CreateTicket';
+import Ticket from './Ticket';
 
 const MainPage = () =>{
 	const requester_email = useSelector( state => state.user?.email)
@@ -25,11 +28,20 @@ const MainPage = () =>{
 	},[gettickets])
 
 	return(
-		<Layout>
-			<Filter />								
-			<TicketCreation email={requester_email}/>	
-			<AllTickets/>
-		</Layout>
+		<Routes>
+			<Route path="/ticket/new" element={<CreateTicket/>} />
+			<Route path="/ticket/:id" element={<Ticket/>} />
+			<Route 
+				path="/"
+				element={
+					<Layout>
+						<Filter />								
+						<TicketCreation email={requester_email}/>
+						<AllTickets/>
+					</Layout>
+				}
+			/>
+		</Routes>
 	)
 }
 

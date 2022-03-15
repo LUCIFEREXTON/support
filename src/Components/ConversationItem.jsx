@@ -16,7 +16,9 @@ const ConversationItem = ({source, conversation}) => {
 				</div>
 				<div className="sender">
 					<div className="responder">{source}</div>
-					<div className="date">{formatDate(conversation?.created_at)}</div>
+					{conversation?.updated_at
+					?<div className="date">Raised On: {formatDate(conversation?.created_at)} | Last Activity: {formatDate(conversation?.updated_at)}</div>
+					:<div className="date">{formatDate(conversation?.created_at)}</div>}
 				</div>
 			</div>
 			<div className="conv-mail">
@@ -25,7 +27,7 @@ const ConversationItem = ({source, conversation}) => {
 				</div>
 				<div className="mail-body">
 					<div className="mail-text">
-						{parse(conversation?.body)}
+						{conversation?.description ? parse(conversation?.description) : parse(conversation?.body)}
 					</div>
 					{conversation?.attachments?.length > 0  &&
 						<div className="all-attachments">

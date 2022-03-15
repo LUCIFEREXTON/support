@@ -1,9 +1,8 @@
-import { useDispatch } from 'react-redux'
 import { formatDate } from '../helperFunction.js'
-
+import { useNavigate } from 'react-router-dom'
 
 const ListItem = ({id, status, subject, createdAt, updatedAt}) => {
-  const dispatch = useDispatch()
+  const history = useNavigate()
   let statusValue = ''
   if( status === 5 ){
     statusValue =  <span className='label label-danger pull-right'>Closed</span>
@@ -11,10 +10,10 @@ const ListItem = ({id, status, subject, createdAt, updatedAt}) => {
     statusValue =  <span className='label label-success pull-right'>Open</span> 
   }
   const onClickHandler = () =>{
-    dispatch({ type: 'SHOW_TICKET', id})
+    history(`/ticket/${id}`)
   }
   return(
-    <li className='list-group-item' data-toggle='modal' data-target='#issue' onClick={onClickHandler}>
+    <li className='list-group-item' onClick={onClickHandler}>
       <div className='media'>
         <i className='fa fa-cog pull-left'></i>
         <div className='media-body'>

@@ -7,7 +7,7 @@ const ConversationGroup = ({ user_id, conversationList })=>{
         {conversationList.map(conversation=>(
             <ConversationItem 
               key={conversation.id}
-              source = {user_id ===conversation.user_id ? 'You Replied': 'Support responded'}
+              source = {user_id ===conversation.user_id || user_id === conversation.requester_id? 'You Replied': 'Support responded'}
               conversation={conversation}
             />
         )).reverse()}    

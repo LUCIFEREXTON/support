@@ -22,7 +22,6 @@ const TicketCreation = ({ email }) =>{
   }
 
   const initialValue = () => {
-    console.log("Hello");
     changeSubject('');
     changeDescription('');
     changeFiles([]);

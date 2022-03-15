@@ -246,7 +246,6 @@ background:#eee;
 .support-content-comment {
 	padding: 10px 10px 10px 30px;
 	background: #eee;
-	border-top: 1px solid #ccc;
 }
 
 
@@ -324,7 +323,9 @@ background:#eee;
 }
 
 /*Custom css*/
- 
+ .dropdown-menu{
+	 display: block
+ }
 .filter-item{
 	display: block; 
 	padding: 3px 20px; 
@@ -332,13 +333,16 @@ background:#eee;
 	cursor: pointer;
 }
 
+.d-block{
+	display: block !important;
+}
 
 .support-content-comment {
 	display: flex;
   flex-direction: column-reverse;
 	padding: 0px;
 	background: none;
-	max-height: 50vh;
+	max-height: 70vh;
 	overflow-y: scroll;
 }
 
@@ -416,14 +420,35 @@ background:#eee;
 .mail-body{
 	grid-column: span 11;
 }
+.reply{
+	position: fixed;
+	bottom: 0px;
+	left: 15px;
+	right: 15px;
+	margin: 14px;
+	box-sizing: border-box;
+}
 
+.replybtn{
+	cursor: pointer;
+	display: inline-block;
+	border: 1px solid black;
+	font-weight: 700;
+	font-size: 22px;
+	border-radius: 30px;
+	padding: 10px 15px;
+}
 /* Conversation Box end */
 
 
 .modal-body{
-	margin: 15px;
+	margin: 0 15px 15px;
 }
 
+.buttons{
+	display: flex;
+	column-gap: 5px;
+}
 
 /* Attachment  */
 
@@ -471,4 +496,18 @@ background:#eee;
 
 .size{
 	font-size: 12px;
+}
+
+/* Create ticket */
+.pos-abs{
+	position: absolute;
+}
+
+.pos-rel{
+	position: relative;
+}
+
+.top-right-10{
+	top:10px;
+	right: 10px;
 }
