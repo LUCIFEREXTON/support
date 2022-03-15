@@ -27,7 +27,7 @@ const MainPage = () =>{
 	return(
 		<Layout>
 			<Filter />								
-			<TicketCreation email={requester_email}/>			
+			<TicketCreation email={requester_email}/>	
 			<AllTickets/>
 		</Layout>
 	)
