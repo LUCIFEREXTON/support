@@ -4,6 +4,7 @@ const ConversationItem = ({source, conversation}) => {
 	console.log(conversation.body)
 	console.log(conversation.body_text)
 	const {to_emails, from_email, cc_emails, bcc_emails} = conversation
+  console.log(conversation.id);
   return(
     <div className={`conversation ${source==='You Replied'?'user':'support'}`}>
 			<div className='row'>
