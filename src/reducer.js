@@ -36,8 +36,8 @@ const reducer = (state = initialState, action) => {
         ...state,
         tickets : [action.ticket, ...state.tickets],
         filterList: [action.ticket, ...state.filterList],
-        opentickets: state.opentickets+1,
-        total: state.opentotal+1,
+        opentickets: state.opentickets + 1,
+        total: state.total + 1,
       }
     }
     case 'UPDATE_STATUS':{
