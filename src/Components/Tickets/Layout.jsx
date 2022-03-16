@@ -4,7 +4,7 @@ const Layout = ({children}) =>{
 			<section className='content'>
 				<div className='row'>
 					<div className='col-md-12'>
-						<div className='grid support-content'>
+						<div className='grid support-content bg-primary-bv'>
 							<div className='grid-body'>
                 {children}
 							</div>

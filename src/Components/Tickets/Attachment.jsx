@@ -9,7 +9,7 @@ const Attachment = ({file}) =>{
         </div>
         <div className="filedetails">
           <div className="filename">                  
-            <a href={file.attachment_url}>{file.name}</a>
+            <a href={file.attachment_url} rel="noreferrer" target="_blank">{file.name}</a>
           </div>
           <div className="size">
             {nicesize(file.size)}

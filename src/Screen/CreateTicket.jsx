@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import axios from "axios";
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
 
 const CreateTicket = ({ email }) =>{
@@ -9,6 +9,7 @@ const CreateTicket = ({ email }) =>{
   const [files, changeFiles] = useState([]);
   const formRef = useRef();
 	const dispatch = useDispatch()
+  const navigate = useNavigate()
   const onSubjectChange = event => {
     changeSubject(event.target.value);
   }
@@ -52,10 +53,10 @@ const CreateTicket = ({ email }) =>{
     initialValue();
   }
   return(
-    <div className="container">
+    <div className="container view-ticket">
       <div className='modal-header bg-primary-bv text-light pos-rel'>
         <h4 className='modal-title'><i className='fa fa-pencil'></i> Create New Issue</h4>
-        <Link to='/' className="btn bg-secondry-bv text-light pull-right pos-abs top-right-10"> BACK </Link>
+        <div onClick={()=>{navigate(-1)}} className="btn bg-secondry-bv text-light pull-right pos-abs top-right-10"> Back </div>
       </div>
       <div className='modal-body'>
         <form ref={formRef}>
