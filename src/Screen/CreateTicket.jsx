@@ -1,14 +1,13 @@
 import { useState, useRef } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 const CreateTicket = ({ email }) =>{
   const [subject, changeSubject] = useState('');
   const [description, changeDescription] = useState('');
   const [files, changeFiles] = useState([]);
   const formRef = useRef();
-  let tickets = useSelector( state => state.tickets)
 	const dispatch = useDispatch()
   const onSubjectChange = event => {
     changeSubject(event.target.value);

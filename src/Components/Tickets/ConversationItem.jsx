@@ -1,10 +1,9 @@
-import { formatDate } from '../helperFunction'
+import { formatDate } from '../../helperFunction'
 import parse from 'html-react-parser';
 import Attachment from './Attachment'
 import { useSelector } from 'react-redux'
 const ConversationItem = ({source, conversation}) => {
 	const name = useSelector( state => state.user.name)
-	const {to_emails, from_email, cc_emails, bcc_emails} = conversation
   console.log(conversation.id);
   return(
     <div className={`conversation ${source==='You Replied'?'user':'support'}`}>

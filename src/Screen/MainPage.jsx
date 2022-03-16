@@ -1,14 +1,14 @@
 import { useEffect, useCallback } from 'react';
 import './style.css';
-import Layout from '../Components/Layout';
-import AllTickets from '../Components/AllTickets';
-import TicketCreation from '../Components/TicketCreation';
-import Filter from '../Components/Filter';
+import Layout from '../Components/Tickets/Layout';
+import AllTickets from '../Components/Tickets/AllTickets';
+import Filter from '../Components/Tickets/Filter';
 import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route } from "react-router-dom";
 import CreateTicket from './CreateTicket';
 import Ticket from './Ticket';
+import Faq from './Faq';
 
 const MainPage = () =>{
 	const requester_email = useSelector( state => state.user?.email)
@@ -31,12 +31,12 @@ const MainPage = () =>{
 		<Routes>
 			<Route path="/ticket/new" element={<CreateTicket/>} />
 			<Route path="/ticket/:id" element={<Ticket/>} />
+			<Route path="/faq" element={<Faq/>} />
 			<Route 
 				path="/"
 				element={
 					<Layout>
-						<Filter />								
-						<TicketCreation email={requester_email}/>
+						<Filter />
 						<AllTickets/>
 					</Layout>
 				}

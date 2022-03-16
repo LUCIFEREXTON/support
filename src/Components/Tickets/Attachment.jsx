@@ -1,5 +1,4 @@
-import { nicesize } from '../helperFunction'
-import { Link } from 'react-router-dom'
+import { nicesize } from '../../helperFunction'
 const Attachment = ({file}) =>{
   const type = file.name.split('.').pop()
   return(

@@ -7,7 +7,6 @@ const TicketCreation = ({ email }) =>{
   const [description, changeDescription] = useState('');
   const [files, changeFiles] = useState([]);
   const formRef = useRef();
-  let tickets = useSelector( state => state.tickets)
 	const dispatch = useDispatch()
   const onSubjectChange = event => {
     changeSubject(event.target.value);

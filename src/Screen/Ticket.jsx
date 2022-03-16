@@ -1,10 +1,7 @@
 import axios from "axios";
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from "react-redux";
-import ConversationGroup from "../Components/ConversationGroup";
-import { formatDate } from '../helperFunction'
-import parse from 'html-react-parser';
-import Attachment from "../Components//Attachment";
+import ConversationGroup from "../Components/Tickets/ConversationGroup";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import { useParams, Link } from "react-router-dom";
 
@@ -14,7 +11,6 @@ const Ticket = ({datetext}) =>{
   const [ticket, setticket] = useState({})
   const [reply, changeReply] = useState('');
   let conversationList = useSelector(state => state.conversationList);
-  let user = useSelector( state => state.user);
   const dispatch = useDispatch();
 
   let statusValue = ''
@@ -39,11 +35,11 @@ const Ticket = ({datetext}) =>{
       .catch(error => console.log(error));
   }
 
-  const fetchConversation = () => {
+  const fetchConversation = useCallback(() => {
     axios.get(`/tickets/${id}/conversations`)
     .then(res => dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...res.data]}))
     .catch(error => console.log(error));
-  }
+  }, [id, dispatch])
 
   const onReplyChange = event => {
     changeReply(event.target.value);
@@ -72,7 +68,7 @@ const Ticket = ({datetext}) =>{
       )()
       fetchConversation();
     }
-  },[id])
+  },[id, fetchConversation])
   
   return(
     <>

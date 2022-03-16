@@ -1,14 +1,13 @@
-import Searchbar from '../Components/Searchbar';
-import CategoryList from '../Components/CategoryList';
-import "./theme.css";
-import "./faq.css"
+import './faq.css';
+import Header from '../Components/Faq/Header';
+import Main from '../Components/Faq/Main';
 const Faq = () => {
-    return (
-        <>
-            <Searchbar />
-            <CategoryList />
-        </>  
-    )
+  return (
+    <div className="faq">
+      <Header/>
+      <Main/>
+    </div>
+  );
 }
 
-export default Faq;
+export default Faq

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import ConversationGroup from "./ConversationGroup";
 import { formatDate } from '../helperFunction'
@@ -13,7 +13,6 @@ const Viewticket = () =>{
   const [ticket, setticket] = useState(null)
   const [reply, changeReply] = useState('');
   let conversationList = useSelector(state => state.conversationList);
-  let tickets = useSelector( state => state.tickets);
   let user = useSelector( state => state.user);
   const dispatch = useDispatch();
 
@@ -30,10 +29,6 @@ const Viewticket = () =>{
     statusChangeButton =  <button type="button" className="btn btn-sm bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(5)}>Close Ticket</button>
   }
 
-  const updateStatusOfTicket = (ticket) => {
-    dispatch({type:'UPDATE_TICKETS', tickets});
-  }
-
   const statusChangeHandler = (status) => {
       axios.put(`/tickets/${id}`, { status })
       .then(res => {
@@ -43,11 +38,11 @@ const Viewticket = () =>{
       .catch(error => console.log(error));
   }
 
-  const fetchConversation = () => {
+  const fetchConversation = useCallback(() => {
     axios.get(`/tickets/${id}/conversations`)
     .then(res => dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...res.data]}))
     .catch(error => console.log(error));
-  }
+  }, [id])
 
   const onReplyChange = event => {
     changeReply(event.target.value);
@@ -79,7 +74,7 @@ const Viewticket = () =>{
       fetchConversation();
     }
 
-  },[id])
+  },[id, fetchConversation])
   
   return(
     <div className="modal fade" id="issue" tabIndex="-1" role="dialog" aria-labelledby="issue" aria-hidden="true">

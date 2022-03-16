@@ -52,7 +52,7 @@ const Filter = () =>{
     }else{
 			setfilteredtickets([...tickets])
     }
-  },[filterStatus])
+  },[filterStatus, tickets])
 
   useEffect(() => {
     if (selectedtype === 'Newest'){
@@ -61,7 +61,7 @@ const Filter = () =>{
     }else if(selectedtype === 'Recently updated'){
 			setfilteredtickets([...filtered])
     }
-  },[selectedtype])
+  },[selectedtype, filtered])
 
 	useEffect(() => {
     dispatch({
