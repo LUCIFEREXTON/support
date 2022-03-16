@@ -6,15 +6,15 @@ const ConversationItem = ({source, conversation}) => {
 	const name = useSelector( state => state.user.name)
   console.log(conversation.id);
   return(
-    <div className={`conversation ${source==='You Replied'?'user':'support'}`}>
+    <div className={`conversation ${source?'user':'support'}`}>
 			<div className="conv-header">
 				<div className="iconbg">
 					<div className="icon">
-						{source==='You Replied'?name[0]:'BV'}
+						{source?name[0]:'BV'}
 					</div>
 				</div>
 				<div className="sender">
-					<div className="responder">{source}</div>
+					<div className="responder">{source?name:'Support'}</div>
 					{conversation?.updated_at
 					?<div className="date">Raised On: {formatDate(conversation?.created_at)} | Last Activity: {formatDate(conversation?.updated_at)}</div>
 					:<div className="date">{formatDate(conversation?.created_at)}</div>}

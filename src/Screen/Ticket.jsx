@@ -3,27 +3,27 @@ import { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import ConversationGroup from "../Components/Tickets/ConversationGroup";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 
-const Ticket = ({datetext}) =>{
+const Ticket = () =>{
   const [openreply, setopenreply] = useState(false)
   const { id } = useParams()
   const [ticket, setticket] = useState({})
   const [reply, changeReply] = useState('');
   let conversationList = useSelector(state => state.conversationList);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate()
   let statusValue = ''
   let statusChangeButton = ''
   if( ticket?.status === 5 ){
-    statusValue =  <span className="badge bg-red pull-left">Status Closed</span> 
+    statusValue =  <span className="badge bg-red ticket-status">Status Closed</span> 
   }else{
-    statusValue =  <span className="badge bg-green pull-left">Status Open</span>
+    statusValue =  <span className="badge bg-green ticket-status">Status Open</span>
   }          
   if( ticket?.status === 5 ){
-    statusChangeButton =  <button type="button" className="btn btn-sm bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(2)}>Reopen Ticket</button>
+    statusChangeButton =  <button type="button" className="btn bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(2)}><strong>Reopen Ticket</strong></button>
   }else{
-    statusChangeButton =  <button type="button" className="btn btn-sm bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(5)}>Close Ticket</button>
+    statusChangeButton =  <button type="button" className="btn bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(5)}><strong>Close Ticket</strong></button>
   }
 
   const statusChangeHandler = (status) => {
@@ -73,12 +73,17 @@ const Ticket = ({datetext}) =>{
   return(
     <>
       <div className="modal-header bg-primary-bv text-light">
-        <h4 className="modal-title"><i className="fa fa-cog"></i> {ticket?.subject} [#{ticket?.id}]</h4>
-        <div className="buttons pos-abs top-right-10">
-          <Link to='/' className="btn btn-sm bg-secondry-bv text-light"> BACK </Link>
-          {statusChangeButton}
+        <div className="ticket-header">
+        <h4 className="modal-title"><i className="fa fa-cog"></i> {ticket?.subject} [#{ticket?.id}] {statusValue}</h4>
+        <div className="buttons">
+          <div className="nav-links pull-right">
+            <Link to='/faq' className='btn bg-secondry-bv text-light'><strong>FAQs</strong></Link>
+            <div className="btn bg-secondry-bv text-light" onClick={()=>{navigate(-1)}}><strong>Back</strong></div>
+            {statusChangeButton}
+          </div>
         </div>
-          {statusValue}
+        </div>
+      
       </div>
       <div className='modal-body'>
         {ticket?.id && <ConversationGroup user_id={ticket?.requester_id} conversationList={[ticket, ...conversationList]} />}
@@ -98,40 +103,3 @@ const Ticket = ({datetext}) =>{
 }
 
 export default Ticket;
-
-
-/*
-
-      <div className='conversation user'>
-        <div className='conv-header'>
-          <div className='iconbg'>
-            <div className='icon'>
-              {user.name[0]}
-            </div>
-          </div>
-          <div className='sender'>
-            <div className='responder'>
-              Ticket Raised by You
-            </div>
-            <div className='date'>
-              Raised On: {formatDate(ticket?.created_at)} | Last Activity: {formatDate(ticket?.updated_at)}
-            </div>
-          </div>
-        </div>
-        <div className='conv-mail'>
-          <div className='mail-icon'>
-            <i className="fa fa-envelope-o" aria-hidden="true"></i>
-          </div>
-          <div className='mail-body'>
-            <div className='mail-text'>
-              {ticket?.description && parse(ticket?.description)}
-            </div>
-            {ticket?.attachments?.length > 0  &&
-              <div className="all-attachments">
-                {ticket?.attachments.map( attachment => <Attachment key={attachment.id} file={attachment}/>)}
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-*/

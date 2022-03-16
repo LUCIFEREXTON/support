@@ -20,7 +20,7 @@ const Header = () => {
             <div className="faqicon">
               <i className="fa fa-info" aria-hidden="true"></i>
             </div>
-            <Link to='ticket/new'>Create ticket</Link>
+            <Link to='/ticket/new'>Create ticket</Link>
           </div>
         </div>
       </div>
