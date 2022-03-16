@@ -1,9 +1,11 @@
 import axios from "axios";
 import Article from "./Article"
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const Folder = ({ id, name })=>{
   const [articleList, setArticleList] = useState([]);
+  const dispatch = useDispatch();
   useEffect(() => {
     if(id) {
       (
@@ -11,6 +13,7 @@ const Folder = ({ id, name })=>{
           try {
             const res = await axios.get(`/solutions/folders/${id}/articles`)
             setArticleList([...res.data])
+            dispatch({type:'UPDATE_ARTICLES', articles: [...res.data]});
           } catch (error) {
             console.log(error)
           }
@@ -29,6 +32,7 @@ const Folder = ({ id, name })=>{
           articleList.map(article => (
             <Article
               key={article.id}
+              id={article.id}
               article={article}
             /> 
           ))

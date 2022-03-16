@@ -9,7 +9,10 @@ const initialState = {
   opentickets: 0,
 	closetickets: 0,
 	selectedTicketId: null,
-  conversationList: []
+  conversationList: [],
+  articles: [],
+  filterArticles: [],
+  article: {}
 }
 
 const ticket_open_status = [2, 3, 4]
@@ -72,6 +75,24 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         conversationList: action.conversationList
+      }
+    }
+    case 'UPDATE_ARTICLES':{
+      return {
+        ...state,
+        articles: [...state.articles, ...action.articles]
+      }
+    }
+    case 'UPDATE_FILTER_ARTICLES':{
+      return {
+        ...state,
+        filterArticles: [...action.filterArticles]
+      }
+    }
+    case 'STORE_ARTICLE':{
+      return {
+        ...state,
+        article: {...action.article}
       }
     }
     default:

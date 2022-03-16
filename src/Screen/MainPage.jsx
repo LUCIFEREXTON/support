@@ -31,7 +31,7 @@ const MainPage = () =>{
 		<Routes>
 			<Route path="/ticket/new" element={<CreateTicket/>} />
 			<Route path="/ticket/:id" element={<Ticket/>} />
-			<Route path="/faq" element={<Faq/>} />
+			<Route path="/faq/*" element={<Faq/>} />
 			<Route 
 				path="/"
 				element={
