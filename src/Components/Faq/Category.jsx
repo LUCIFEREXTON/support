@@ -5,16 +5,14 @@ const Category = ({ id, name })=>{
   const [folderList, setFolderList] = useState([]);
   useEffect(() => {
     if(id) {
-      (
-        async () => {
+      (async () => {
           try {
             const res = await axios.get(`/solutions/categories/${id}/folders`)
             setFolderList([...res.data])
           } catch (error) {
             console.log(error)
           }
-        }
-      )()
+      })()
     }
   },[id])
   return(

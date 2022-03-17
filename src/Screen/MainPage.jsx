@@ -11,22 +11,6 @@ import Ticket from './Ticket';
 import Faq from './Faq';
 
 const MainPage = () =>{
-	const requester_email = useSelector( state => state.user?.email)
-	const dispatch = useDispatch()
-
-	const gettickets = useCallback(async()=>{
-		try {
-			const res = await axios.get(`/tickets?order_by=updated_at&email=${requester_email}`)
-			dispatch({type:'UPDATE_TICKETS', tickets: [...res.data]})
-		} catch (error) {
-			console.log(error)
-		}
-	}, [requester_email, dispatch])
-
-	useEffect(()=>{
-		gettickets()
-	},[gettickets])
-
 	return(
 		<Routes>
 			<Route path="/ticket/new" element={<CreateTicket/>} />

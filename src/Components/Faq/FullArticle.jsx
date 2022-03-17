@@ -12,7 +12,7 @@ const FullArticle = ()=>{
         <div className="date">{`Modified on: ${formatDate(article?.created_at)}`}</div>
       </div>
       <div className="full-article-body">
-        {parse(article?.description)}
+        {article?.description && parse(article?.description)}
       </div>
     </div>
   )
