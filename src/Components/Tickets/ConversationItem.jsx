@@ -26,7 +26,23 @@ const ConversationItem = ({source, conversation}) => {
 				</div>
 				<div className="mail-body">
 					<div className="mail-text">
-						{conversation?.description ? parse(conversation?.description) : parse(conversation?.body)}
+						{
+							conversation?.description 
+							? 
+							(
+								<>
+									<div style={{"display": "flex"}}>
+										{conversation?.custom_fields?.cf_blog_uri?.length 
+										? <span style={{"margin-right": "5px", "font-weight": "bold"}}>Links of the Blog that you shared with us are:</span>
+										: <span></span>
+										}
+										{conversation?.custom_fields?.cf_blog_uri}
+									</div>
+									{parse(conversation?.description)}
+								</>
+							) 
+							: parse(conversation?.body)
+						}
 					</div>
 					{conversation?.attachments?.length > 0  &&
 						<div className="all-attachments">
