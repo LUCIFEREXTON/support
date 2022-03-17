@@ -327,7 +327,7 @@ background:#eee;
 
 /*Custom css*/
  .dropdown-menu{
-	 display: block
+	 display: block !important;
  }
 .filter-item{
 	display: block; 

@@ -9,7 +9,7 @@ const Article = ({ article }) =>{
   }
   return(
     <div className="article">
-      <div className="liicon"><i class="fa fa-book" aria-hidden="true"></i></div>
+      <div className="liicon"><i className="fa fa-book" aria-hidden="true"></i></div>
       <div className="articletitle" onClick={fetchArticle}><Link to={`/faq/article`}>{article?.title}</Link></div>
     </div>
   )

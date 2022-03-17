@@ -100,7 +100,7 @@
   width: 100%;
 }
 
-.main > .title{
+.main > div > .title{
   font-size: x-large;
   font-weight: bold;
 }

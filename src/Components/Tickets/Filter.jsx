@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 const Filter = () =>{
   const [filteredtickets, setfilteredtickets] = useState([]);
   const [filterStatus, setFilterStatus] = useState('2');
-  const [selectedtype, setselectedtype] = useState('Newest')
+  const [selectedtype, setselectedtype] = useState('Recently updated')
   const [dropdown, setdropdown] = useState(false)
   const dispatch = useDispatch()
 
@@ -25,6 +25,11 @@ const Filter = () =>{
 		if (e.target.dataset.status === filterStatus){
 			return
 		}
+    if (filterStatus === '2'){
+      setfilteredtickets([...tickets.filter(ticket => ticket.status!==5)])
+    }else{
+			setfilteredtickets([...tickets])
+    }
 		setFilterStatus(e.target.dataset.status)
   }
 
@@ -36,10 +41,14 @@ const Filter = () =>{
     switch(e.target.dataset.type){
       case 'Newest':{
         setselectedtype('Newest')
+        filtered.sort((a, b)=> new Date(b.created_at) - new Date(a.created_at))
+        setfilteredtickets([...filtered])
         break
       }
       case 'Recently updated':{
         setselectedtype('Recently updated')
+        filtered.sort((a, b)=> new Date(b.updated_at) - new Date(a.updated_at))
+        setfilteredtickets([...filtered])
         break
       }
       default: break
@@ -47,29 +56,16 @@ const Filter = () =>{
     toggleDropdown()
 	}
 
-  useEffect(() => {
-    if (filterStatus === '1'){
-      setfilteredtickets([...tickets.filter(ticket => ticket.status!==5)])
-    }else{
-			setfilteredtickets([...tickets])
-    }
-  },[filterStatus, tickets])
-
-  useEffect(() => {
-    if (selectedtype === 'Newest'){
-      filtered.sort((a, b)=> new Date(b.created_at) - new Date(a.created_at))
-      setfilteredtickets([...filtered])
-    }else if(selectedtype === 'Recently updated'){
-      setfilteredtickets([...filtered])
-    }
-  },[selectedtype])
-
 	useEffect(() => {
     dispatch({
       type:'CHANGE_FILTER_LIST', 
       filterList: filteredtickets
     })
-  }, [filteredtickets, dispatch])
+  }, [filteredtickets])
+
+  useEffect(()=>{
+    setfilteredtickets([...tickets])
+  },[])
 	
 	return(
     <>
@@ -98,10 +94,13 @@ const Filter = () =>{
         <button type='button' className='btn btn-default dropdown-toggle' onClick={toggleDropdown}>
           Sort: <strong>{selectedtype}</strong> <span className='caret'></span>
         </button>
-        {dropdown && <ul className='dropdown-menu fa-padding' role='menu'>
+        {
+        dropdown && 
+        <ul className='dropdown-menu fa-padding' role='menu'>
           <li data-type='Newest' className='filter-item' onClick={sorting}><i className={`fa${selectedtype === 'Newest'?' fa-check':''}`}></i> Newest</li>
           <li data-type='Recently updated' className='filter-item' onClick={sorting}><i className={`fa${selectedtype === 'Recently updated'?' fa-check':''}`}> </i> Recently updated</li>
-        </ul>}
+        </ul>
+        }
       </div>
       <div className="nav-links pull-right">
         <Link to='/ticket/new' className='btn bg-secondry-bv text-light'><strong>New Issue</strong></Link>
