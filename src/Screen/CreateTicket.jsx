@@ -89,9 +89,6 @@ const CreateTicket = () =>{
             <input name='subject' type='text' className='form-control' placeholder='Subject' value={subject} onChange={onSubjectChange}/>
           </div>
           <div className="form-group">
-            <textarea name="description" className="form-control" value={description} placeholder="Please detail your issue or question" style={{height: '120px'}} onChange={onDescriptionChange}/>
-          </div>
-          <div className="form-group">
             <div name="blog_uri" className="form-control bloguri-container">
               {
                 blogURI.map((uri, ind) => (
@@ -103,7 +100,8 @@ const CreateTicket = () =>{
               }
               <div className="blog-uri bloguri-input-div">
                 <input 
-                  type="text"  
+                  type="text"
+                  onBlur={() => setDropdown(false)}
                   className="bloguri-input"
                   placeholder="Enter blog url"
                   ref={inputURIRef}
@@ -132,6 +130,9 @@ const CreateTicket = () =>{
               </ul>
             }
           </div>
+          <div className="form-group">
+            <textarea name="description" className="form-control" value={description} placeholder="Please detail your issue or question" style={{height: '120px'}} onChange={onDescriptionChange}/>
+          </div>          
         <form ref={formRef}>
           <div className="mb-3 form-group">
             {

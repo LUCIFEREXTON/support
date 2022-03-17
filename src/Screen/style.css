@@ -594,6 +594,10 @@ background:#eee;
 	box-sizing:border-box;
 }
 
+.bloguri-input:focus-visible{
+	outline: none;
+}
+
 .uri-selected{
 	display: flex;
 	margin: 0px 5px 0px 5px;
