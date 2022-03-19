@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
+import axios from 'axios'
 import TicketBtn from './TicketBtn';
 const Header = () => {
   const [search, changeSearch] = useState('');
@@ -8,14 +9,16 @@ const Header = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { pathname } = useLocation()
-  const searchHandler = () => {
+  const searchHandler = async() => {
     dispatch({type: 'EMPTY_FILTER_ARTICLES'})
     if(search !== '') {
-      console.log(articles)
-      const searchTerms = search.toLowerCase().split(' ')
-      let filterArticles = [...articles].filter(article => searchTerms.some(term => article.title.toLowerCase().includes(term)));
-      dispatch({type: 'UPDATE_FILTER_ARTICLES', filterArticles})
-      navigate('/faq/search');
+      try{
+        const { data } = await axios.post(`search/solutions?term=${search}`)
+        dispatch({type: 'UPDATE_FILTER_ARTICLES', filterArticles: [...data]})
+        navigate('/faq/search')
+      }catch(e){
+        console.log(e)
+      }
     } else{
       navigate('/faq')
     }

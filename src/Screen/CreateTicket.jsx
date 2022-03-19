@@ -25,6 +25,7 @@ const CreateTicket = () =>{
   }
 
   const onFilesChange = event => {
+    console.log(event.target.files);
     changeFiles([...files, ...event.target.files]);
     formRef.current.reset();
   }
@@ -140,7 +141,7 @@ const CreateTicket = () =>{
                 {
                   files.map((file, ind) => (
                     <div className="attachment-selected" key={ind}>
-                      <a href={file.attachment_url} rel="noreferrer" target="_blank">{file.name}</a>
+                      <>{file.name}</>
                       <button type="button" className="file-remove-btn" onClick={() => removeSelectedFile(`${file.name}`)}>x</button>
                     </div>
                   ))
