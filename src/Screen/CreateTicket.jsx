@@ -88,16 +88,14 @@ const CreateTicket = () =>{
     changeFiles([...files.filter(file => file.name !== fileName)]);
   }
   return(
-    <div 
-      className="container view-ticket" 
-      onClick={(event) => {
-        if(containerRef.current && !containerRef.current.contains(event.target)) { 
-          setDropdown(false);
-        }
-      }}>
-      <div className='modal-header bg-primary-bv text-light pos-rel'>
+    <div onClick={(event) => {
+      if(containerRef.current && !containerRef.current.contains(event.target)) { 
+      setDropdown(false);
+      }
+    }}>
+      <div className='modal-header bg-primary-bv text-light pos-rel new-ticket-header'>
         <h4 className='modal-title'><i className='fa fa-pencil'></i> Create New Issue</h4>
-        <div onClick={()=>{navigate(-1)}} className="btn bg-secondry-bv text-light pull-right pos-abs top-right-10"> Back </div>
+        {/* <div onClick={()=>{navigate(-1)}} className="btn bg-secondry-bv text-light pull-right pos-abs top-right-10"> Back </div> */}
       </div>
       <div className='modal-body'>
           <div className='form-group'>

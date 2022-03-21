@@ -613,7 +613,9 @@ margin-left: 10px;
 }
 
 .uri-dropdown{
-	position: relative !important;
+	position: absolute;
+	top: 95px !important;
+	left: 15px !important;
 }
 
 .attachment-container {
@@ -640,4 +642,35 @@ margin-left: 10px;
 	background: white;
 	border: none;
 	margin-left: 10px;
-	}
+}
+
+.new-ticket-container{
+	display: block;
+	background: white;
+	/* width: fit-content !important; */
+	height: fit-content;
+	margin: auto;
+	border-radius: 5px;
+	padding: 0px !important;
+}
+
+.modal-dialog-centered{
+	margin-top: 0px !important;
+	width: 100% !important;
+}
+
+.new-ticket-header{
+	display: flex;
+}
+
+.new-ticket-header > h4 {
+	width: 98%;
+}
+
+.modal-close-btn {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+	z-index: 10;
+	color: white;
+}
