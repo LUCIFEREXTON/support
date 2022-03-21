@@ -68,7 +68,7 @@ const Filter = () =>{
   },[])
 	
 	return(
-    <>
+    <div className="tkt-header bg-primary-bv">
       <h2><strong>Issues</strong></h2>   
       <hr/>
       <div className='btn-group'>
@@ -106,7 +106,8 @@ const Filter = () =>{
         <Link to='/ticket/new' className='btn bg-secondry-bv text-light'><strong>New Issue</strong></Link>
         <Link to='/faq' className='btn bg-secondry-bv text-light'><strong>FAQs</strong></Link>
       </div>
-    </>
+      <div className='padding'></div>
+    </div>
   );
 }
 

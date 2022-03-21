@@ -16,7 +16,7 @@ const ListItem = ({id, status, subject, createdAt, updatedAt}) => {
     <li className='list-group-item' onClick={onClickHandler}>
       <div className='media'>
         <i className='fa fa-cog pull-left'></i>
-        <div className='media-body'>
+        <div className='media-body tkt-text'>
           <strong>{subject}</strong>  <span className='number'>#{id}</span> {statusValue}
 						<p className='info'><small>Raised On: {formatDate(new Date(createdAt))} | Updated At: {formatDate(new Date(updatedAt))}</small></p>
         </div>

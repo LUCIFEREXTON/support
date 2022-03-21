@@ -84,7 +84,7 @@ background:#eee;
 
 .grid .grid-body {
 	padding: 15px 20px 15px 20px;
-	font-size: 1.3em;
+	font-size: 1em;
 	line-height: 1.2em;
 }
 
@@ -326,6 +326,13 @@ background:#eee;
 }
 
 /*Custom css*/
+/*Shrinking code start*/
+.container{
+	width: 100% !important;
+	margin: 0;
+	padding: 0 !important;
+}
+/*Shrinking code end*/
  .dropdown-menu{
 	 display: block !important;
  }
@@ -641,3 +648,19 @@ margin-left: 10px;
 	border: none;
 	margin-left: 10px;
 	}
+/*Header fix*/
+.tkt-header{
+	position: sticky;
+	top: 0px;
+	z-index: 10;
+}
+
+.tkt-header .btn{
+	padding: 3px 6px;
+	font-size: 13px;
+	font-weight: bold;
+}
+
+.tkt-text{
+	font-size: 15px;
+}
