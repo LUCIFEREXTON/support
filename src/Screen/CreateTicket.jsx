@@ -9,10 +9,11 @@ const CreateTicket = () =>{
   const [files, changeFiles] = useState([]);
   const [blogURI, changeBlogURI] = useState([]);
   const urilist = ["https://blogvault.net", "https://google.com", "https://amazon.in","https://youtube.com"];
-  const [filteredURI, changefilteredURIList] = useState([...urilist.slice(0,4)]);
-  const [dropdown, setDropdown] = useState(true);
+  const [filteredURI, changefilteredURIList] = useState([...urilist.slice(0,Math.min(urilist.length,5))]);
+  const [dropdown, setDropdown] = useState(false);
   const formRef = useRef();
   const fileUploadRef = useRef();
+  const containerRef = useRef();
   const email = useSelector(state => state.user.email);
   const inputURIRef = useRef();
 	const dispatch = useDispatch()
@@ -67,7 +68,7 @@ const CreateTicket = () =>{
   const changeURIFilter = (inputText) => {
     let filteruri = [...urilist.filter(uri => uri.includes(inputText))];
     filteruri = filteruri.filter(uri => !blogURI.includes(uri));
-    changefilteredURIList([...filteruri.slice(0, Math.min(filteruri.length, 4))]);
+    changefilteredURIList([...filteruri.slice(0, Math.min(filteruri.length, 5))]);
   }
   const addContentToBlogDiv = (event) => {
     changeBlogURI([...blogURI,event.target.dataset.type]);
@@ -87,7 +88,13 @@ const CreateTicket = () =>{
     changeFiles([...files.filter(file => file.name !== fileName)]);
   }
   return(
-    <div className="container view-ticket">
+    <div 
+      className="container view-ticket" 
+      onClick={(event) => {
+        if(containerRef.current && !containerRef.current.contains(event.target)) { 
+          setDropdown(false);
+        }
+      }}>
       <div className='modal-header bg-primary-bv text-light pos-rel'>
         <h4 className='modal-title'><i className='fa fa-pencil'></i> Create New Issue</h4>
         <div onClick={()=>{navigate(-1)}} className="btn bg-secondry-bv text-light pull-right pos-abs top-right-10"> Back </div>
@@ -96,7 +103,7 @@ const CreateTicket = () =>{
           <div className='form-group'>
             <input name='subject' type='text' className='form-control' placeholder='Subject' value={subject} onChange={onSubjectChange}/>
           </div>
-          <div className="form-group">
+          <div className="form-group" ref={containerRef}>
             <div name="blog_uri" className="form-control bloguri-container">
               {
                 blogURI.map((uri, ind) => (
@@ -109,12 +116,6 @@ const CreateTicket = () =>{
               <div className="blog-uri bloguri-input-div">
                 <input 
                   type="text"
-                  onBlur={(event) => {
-                    // if(event.relatedTarget) {
-                    //   setDropdown(false);
-                    // }
-                    setDropdown(false);
-                  }}
                   className="bloguri-input"
                   placeholder="Enter blog url"
                   ref={inputURIRef}
@@ -172,7 +173,7 @@ const CreateTicket = () =>{
           </div>
         </form>
       </div>
-      <div className='modal-footer' style={{"text-align": "center"}}> 
+      <div className='modal-footer' style={{"textAlign": "center"}}> 
         <button type='button' className='btn btn-lg btn-default' data-dismiss='modal' onClick={initialValue}> Reset</button>
         <button type='submit' className='btn btn-lg bg-secondry-bv text-light' onClick={createClickhandler} data-dismiss='modal'> Create</button>
       </div>
