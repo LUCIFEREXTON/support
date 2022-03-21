@@ -8,8 +8,9 @@ const CreateTicket = () =>{
   const [description, changeDescription] = useState('');
   const [files, changeFiles] = useState([]);
   const [blogURI, changeBlogURI] = useState([]);
-  const [urilist, changeURIList] = useState(["https://blogvault.net", "https://google.com", "https://amazon.in","https://youtube.com"]);
-  const [dropdown, setDropdown] = useState(false);
+  const urilist = ["https://blogvault.net", "https://google.com", "https://amazon.in","https://youtube.com"];
+  const [filteredURI, changefilteredURIList] = useState([...urilist.slice(0,4)]);
+  const [dropdown, setDropdown] = useState(true);
   const formRef = useRef();
   const fileUploadRef = useRef();
   const email = useSelector(state => state.user.email);
@@ -63,15 +64,21 @@ const CreateTicket = () =>{
     onTicketCreate();
     initialValue();
   }
+  const changeURIFilter = (inputText) => {
+    let filteruri = [...urilist.filter(uri => uri.includes(inputText))];
+    filteruri = filteruri.filter(uri => !blogURI.includes(uri));
+    changefilteredURIList([...filteruri.slice(0, Math.min(filteruri.length, 4))]);
+  }
   const addContentToBlogDiv = (event) => {
     changeBlogURI([...blogURI,event.target.dataset.type]);
-    changeURIList([...urilist.filter(bloguri => bloguri !== event.target.dataset.type)]);
     toggleDropdown();
     resetURIInputField();
   }
   const removeSelectedURI = (uri) => {
     changeBlogURI([...blogURI.filter(bloguri => bloguri !== uri)]);
-    changeURIList([...urilist,uri]);
+  }
+  const changeDropdownList = (event) => {
+    changeURIFilter(event.target.value.toLowerCase());
   }
   const resetURIInputField = () => {
     inputURIRef.current.value = "";
@@ -95,18 +102,24 @@ const CreateTicket = () =>{
                 blogURI.map((uri, ind) => (
                   <div className="blog-uri uri-selected" key={ind}>
                     <div>{uri}</div>
-                    <button type="button" className="uri-remove-btn" onClick={() => removeSelectedURI(`${uri}`)}>x</button>
+                    <button type="button" className="uri-remove-btn" onClick={() => { removeSelectedURI(`${uri}`); setDropdown(false);}}>x</button>
                   </div>
                 ))
               }
               <div className="blog-uri bloguri-input-div">
                 <input 
                   type="text"
-                  onBlur={() => setDropdown(false)}
+                  onBlur={(event) => {
+                    // if(event.relatedTarget) {
+                    //   setDropdown(false);
+                    // }
+                    setDropdown(false);
+                  }}
                   className="bloguri-input"
                   placeholder="Enter blog url"
                   ref={inputURIRef}
-                  onClick={toggleDropdown} 
+                  onChange={changeDropdownList}
+                  onClick={() => { toggleDropdown(); changeURIFilter('');}} 
                   onKeyDown={(event) =>  { 
                     if (event.key === 'Enter') 
                     { 
@@ -124,7 +137,7 @@ const CreateTicket = () =>{
               dropdown && 
               <ul className='dropdown-menu fa-padding uri-dropdown' role='menu'>
                 {
-                  urilist.map((uri, ind) => (
+                  filteredURI.map((uri, ind) => (
                     <li data-type={`${uri}`} className='filter-item' key={ind} onClick={addContentToBlogDiv}>{uri}</li>
                   ))
                 }
