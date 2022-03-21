@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from 'react-router-dom'
+import Modal from '../Modal'
+import CreateTicket from "../../Screen/CreateTicket";
 
 
 const Filter = () =>{
@@ -9,7 +11,7 @@ const Filter = () =>{
   const [selectedtype, setselectedtype] = useState('Recently updated')
   const [dropdown, setdropdown] = useState(false)
   const dispatch = useDispatch()
-
+  
   const toggleDropdown = () => setdropdown(!dropdown)
 
   const { tickets, filtered, opentickets, total } = useSelector( state => {
@@ -103,7 +105,7 @@ const Filter = () =>{
         }
       </div>
       <div className="nav-links pull-right">
-        <Link to='/ticket/new' className='btn bg-secondry-bv text-light'><strong>New Issue</strong></Link>
+        <div data-toggle='modal' data-target="#newTicketModal" className='btn bg-secondry-bv text-light'><strong>New Issue</strong></div>
         <Link to='/faq' className='btn bg-secondry-bv text-light'><strong>FAQs</strong></Link>
       </div>
       <div className='padding'></div>

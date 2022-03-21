@@ -3,18 +3,16 @@ import './style.css';
 import Layout from '../Components/Tickets/Layout';
 import AllTickets from '../Components/Tickets/AllTickets';
 import Filter from '../Components/Tickets/Filter';
-import axios from 'axios';
-import { useSelector, useDispatch } from 'react-redux';
 import { Routes, Route } from "react-router-dom";
 import CreateTicket from './CreateTicket';
 import Ticket from './Ticket';
 import Faq from './Faq';
 
+import Modal from '../Components/Modal'
+
 const MainPage = () =>{
 	return(
 		<Routes>
-			<Route path="/ticket/new" element={<CreateTicket/>} />
-			<Route path="/ticket/:id" element={<Ticket/>} />
 			<Route path="/faq/*" element={<Faq/>} />
 			<Route 
 				path="/"
@@ -22,6 +20,12 @@ const MainPage = () =>{
 					<Layout>
 						<Filter />
 						<AllTickets/>
+						<Modal id='newTicketModal'>
+							<CreateTicket/>
+						</Modal>						
+						<Modal id='viewTicketModal'>
+							<Ticket/>
+						</Modal>						
 					</Layout>
 				}
 			/>

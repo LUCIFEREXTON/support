@@ -16,7 +16,8 @@ const initialState = {
   article: {},
   ticketPage: 1,
   allfetched:false,
-  ticket_per_page: 14
+  ticket_per_page: 14,
+  ticket: {}
 }
 
 const ticket_open_status = [2, 3, 4]
@@ -50,6 +51,12 @@ const reducer = (state = initialState, action) => {
         opentickets: open
       }
     }
+    case 'SAVE_TICKET':{
+      return {
+        ...state,
+        ticket: {...action.ticket}
+      }
+    }
     case 'CREATE_TICKET':{
       return {
         ...state,
@@ -63,6 +70,7 @@ const reducer = (state = initialState, action) => {
       if( action.ticket.status === 5){
         return {
           ...state,
+          ticket: {...action.ticket},
           tickets: [action.ticket, ...state.tickets.filter(ticket => ticket.id !== action.ticket.id)],
           filterList: [...state.filterList.filter(ticket => ticket.id !== action.ticket.id)],
           opentickets: state.opentickets - 1

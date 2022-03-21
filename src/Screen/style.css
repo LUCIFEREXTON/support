@@ -83,7 +83,7 @@ background:#eee;
 }
 
 .grid .grid-body {
-	padding: 15px 20px 15px 20px;
+	/* padding: 15px 20px 15px 20px; */
 	font-size: 1em;
 	line-height: 1.2em;
 }
@@ -366,7 +366,7 @@ background:#eee;
 	display: flex;
   flex-direction: column-reverse;
 	padding: 0px;
-	max-height: 70vh;
+	max-height: 60vh;
 	overflow-y: scroll;
 }
 
@@ -469,11 +469,23 @@ background:#eee;
 	margin: 0 15px 15px;
 }
 
+#viewTicketModal .modal-body{
+	margin: 0;
+	padding: 0;
+}
+
 .buttons{
 	display: flex;
 	column-gap: 5px;
 }
 
+.buttons .nav-links .btn{
+	margin-right: 30px;
+}
+.close{
+	opacity: 1 !important;
+	font-weight: bold !important;
+}
 /* Attachment  */
 
 .attachment{
@@ -655,6 +667,7 @@ margin-left: 10px;
 	position: sticky;
 	top: 0px;
 	z-index: 10;
+	padding: 5px 10px;
 }
 
 .tkt-header .btn{
@@ -670,7 +683,7 @@ margin-left: 10px;
 .new-ticket-container{
 	display: block;
 	background: white;
-	height: fit-content;
+	height: 70vh;
 	margin: auto;
 	border-radius: 5px;
 	padding: 0px !important;
@@ -679,7 +692,9 @@ margin-left: 10px;
 
 .modal-dialog-centered{
 	margin-top: 0px !important;
+	margin-bottom: 0px !important;
 	width: 100% !important;
+	height: 100%;
 }
 
 .new-ticket-header{
@@ -692,7 +707,7 @@ margin-left: 10px;
 
 .modal-close-btn {
 	position: absolute;
-	top: 15px;
+	top: 20px;
 	right: 15px;
 	z-index: 10;
 	color: white;
