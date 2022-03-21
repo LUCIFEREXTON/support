@@ -8,9 +8,10 @@ import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import reducer from './reducer';
 import axios from 'axios';
+import { composeWithDevTools } from "redux-devtools-extension";
 axios.defaults.baseURL = process.env.REACT_APP_FRESHDESK_BASE_URL;
 axios.defaults.headers.common['Authorization'] = process.env.REACT_APP_FRESHDESK_API_KEY
-const store = createStore(reducer);
+const store = createStore(reducer, composeWithDevTools());
 
 ReactDOM.render(
   <Provider store={store}>

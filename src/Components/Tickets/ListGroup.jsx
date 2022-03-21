@@ -1,8 +1,8 @@
 import ListItem from './ListItem'
-import { connect }from 'react-redux'
+import { useSelector }from 'react-redux'
 
-const ListGroup = ({ filterList })=>{
-  
+const ListGroup = ()=>{
+  const filterList = useSelector(state => state.filterList)
   return (
     <ul className='list-group fa-padding'>
       {filterList.map(ticket=>(
@@ -19,12 +19,5 @@ const ListGroup = ({ filterList })=>{
   )
 }
 
-const mapStateToProps = (state)=>{
-  return {
-    filterList: state.filterList
-  }
-}
 
-
-
-export default connect(mapStateToProps)(ListGroup);
+export default ListGroup;

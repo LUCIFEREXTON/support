@@ -9,13 +9,32 @@ const initialState = {
   opentickets: 0,
 	closetickets: 0,
 	selectedTicketId: null,
-  conversationList: []
+  conversationList: [],
+  folderList: [],
+  articles: [],
+  filterArticles: [],
+  article: {},
+  ticketPage: 1,
+  allfetched:false,
+  ticket_per_page: 14
 }
 
 const ticket_open_status = [2, 3, 4]
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'UPDATE_PAGE_NUMBER':{
+      return {
+        ...state,
+        ticketPage: action.page
+      }
+    }
+    case 'ALL_FETCHED':{
+      return {
+        ...state,
+        allfetched: action.status
+      }
+    }
     case 'UPDATE_TICKETS':{
       let open = 0 
       const total = action.tickets.reduce((total, ticket)=>{
@@ -72,6 +91,44 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         conversationList: action.conversationList
+      }
+    }
+    case 'INSERT_CATEGORY':{
+      if(state.folderList.includes(action.folderId))
+        return state
+      return {
+        ...state,
+        folderList: [...state.folderList, action.folderId]
+      }
+    }
+    case 'REMOVE_CATEGORY':{
+      return {
+        ...state,
+        folderList: state.folderList.filter(folderId=>folderId!==action.folderId)
+      }
+    }
+    case 'UPDATE_ARTICLES':{
+      return {
+        ...state,
+        articles: [...state.articles, ...action.articles]
+      }
+    }
+    case 'UPDATE_FILTER_ARTICLES':{
+      return {
+        ...state,
+        filterArticles: [...action.filterArticles]
+      }
+    }
+    case 'EMPTY_FILTER_ARTICLES':{
+      return {
+        ...state,
+        filterArticles: []
+      }
+    }
+    case 'STORE_ARTICLE':{
+      return {
+        ...state,
+        article: {...action.article}
       }
     }
     default:
