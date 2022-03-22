@@ -3,15 +3,18 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import ConversationGroup from "../Components/Tickets/ConversationGroup";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw } from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from 'draftjs-to-html';
 
 const Ticket = () => {
   const [openreply, setopenreply] = useState(false)
   const [ticket, setticket] = useState({})
   const reduxticket = useSelector( state => state.ticket)
   const { id } = reduxticket
-  const [reply, changeReply] = useState('');
   const [files, changeFiles] = useState([]);
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const formRef = useRef();
   const fileUploadRef = useRef();
   let conversationList = useSelector(state => state.conversationList);
@@ -42,30 +45,28 @@ const Ticket = () => {
     }
   }
 
-  const onReplyChange = event => {
-    changeReply(event.target.value);
-  }
-
   const onReplySubmit = () => {
-    let formData = new FormData();
-    formData.append( "body", reply);
-    formData.append("private", false);
-    formData.append("notify_emails[]", "ajaykanyal11@gmail.com");
-    formData.append("user_id", ticket.requester_id);
-    files.forEach(file => formData.append("attachments[]",file));
-    axios.post(`/tickets/${id}/notes`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    .then(res => {
-      dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...conversationList, res.data]})
-      setopenreply(false)
-      changeReply('')
-      changeFiles([])
-      formRef.current.reset()
-    })
-    .catch(error => console.log(error));
+    if(editorState.getCurrentContent().getPlainText()!==''){
+      let formData = new FormData();
+      formData.append( "body", draftToHtml(convertToRaw(editorState.getCurrentContent())));
+      formData.append("private", false);
+      formData.append("notify_emails[]", "ajaykanyal11@gmail.com");
+      formData.append("user_id", ticket.requester_id);
+      files.forEach(file => formData.append("attachments[]",file));
+      axios.post(`/tickets/${id}/notes`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(res => {
+        dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...conversationList, res.data]})
+        setopenreply(false)
+        setEditorState(() => EditorState.createEmpty())
+        changeFiles([])
+        formRef.current.reset()
+      })
+      .catch(error => console.log(error));
+    }
   }
 
   const onFilesChange = event => {
@@ -95,41 +96,62 @@ const Ticket = () => {
       </div>
       <div className='modal-body'>
         {ticket?.id && <ConversationGroup user_id={ticket?.requester_id} conversationList={[ticket, ...conversationList]} />}
-        <div className="reply">
-          <div className="replybtn bg-secondry-bv text-light" onClick={()=>{setopenreply(!openreply);changeReply('');changeFiles([]);formRef.current.reset();}}><span className='fa fa-reply'></span> &nbsp;{openreply?'Cancel reply':'Post a reply'}</div>
-          {openreply &&
-          <div>  
-            <div className="form-group">
-              <textarea name="reply" className="form-control" placeholder="Write Reply" style={{height: '120px'}} onChange={onReplyChange} value={reply}/>
+        {!openreply && <div className="reply">
+          <div 
+            className="replybtn bg-secondry-bv text-light" 
+            onClick={()=>{
+              setopenreply(!openreply)
+              setEditorState(() => EditorState.createEmpty())
+              changeFiles([])
+              formRef.current.reset()
+              }}
+            >
+              <span className='fa fa-reply'></span> &nbsp;Reply
             </div>
-            <form ref={formRef}>
-              <div className="mb-3 form-group">
-                {
-                  files?.length  !== 0 && <div name="attachements" className="form-control attachment-container">
-                    {
-                      files.map((file, ind) => (
-                        <div className="attachment-selected" key={ind}>
-                          <>{file.name}</>
-                          <button type="button" className="file-remove-btn" onClick={() => removeSelectedFile(`${file.name}`)}>x</button>
-                        </div>
-                      ))
-                    }
-                  </div>
-                }
-                <button type="button" className="btn btn-primary" onClick={(event) => fileUploadRef.current.click()}>Upload Attachments</button>
-                <input 
-                  type="file"
-                  ref={fileUploadRef}  
-                  multiple
-                  onChange={onFilesChange}
-                  style={{"display": "none"}} 
-                />
-              </div>
-            </form>
-            <button type="submit" className="btn btn-primary text-left btn-reply" onClick={onReplySubmit}>Reply</button>
-          </div>}
-        </div>
+        </div>}
       </div>
+      {openreply && <div className="reply-modal">
+        <div className="close-reply" onClick={()=>{
+              setopenreply(!openreply)
+              setEditorState(() => EditorState.createEmpty())
+              changeFiles([])
+              formRef.current.reset()
+              }}>X</div>
+        <div className="form-group">
+          <Editor
+            name="description"
+            className="form-control"
+            placeholder="Please detail your issue or question"
+            editorState={editorState}
+            onEditorStateChange={setEditorState}
+          />
+        </div>          
+        <form ref={formRef}>
+            <div className="mb-3 form-group">
+              {
+                files?.length  !== 0 && <div name="attachements" className="form-control attachment-container">
+                  {
+                    files.map((file, ind) => (
+                      <div className="attachment-selected" key={ind}>
+                        <>{file.name}</>
+                        <button type="button" className="file-remove-btn" onClick={() => removeSelectedFile(`${file.name}`)}>x</button>
+                      </div>
+                    ))
+                  }
+                </div>
+              }
+              <button type="button" className="btn btn-primary" onClick={(event) => fileUploadRef.current.click()}>Upload Attachments</button>
+              <input 
+                type="file"
+                ref={fileUploadRef}  
+                multiple
+                onChange={onFilesChange}
+                style={{"display": "none"}} 
+              />
+            </div>
+          </form>
+          <button type="submit" className="btn btn-primary text-left btn-reply" onClick={onReplySubmit}>Reply</button>
+      </div>}
     </>
   );
 }

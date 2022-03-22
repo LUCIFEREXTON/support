@@ -1,7 +1,6 @@
 import ConversationItem from './ConversationItem'
 
 const ConversationGroup = ({ user_id, conversationList })=>{
-  
   return (
     <div className='support-content-comment'>
         {conversationList.map(conversation=>(

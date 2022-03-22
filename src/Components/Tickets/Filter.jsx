@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from 'react-router-dom'
-import Modal from '../Modal'
-import CreateTicket from "../../Screen/CreateTicket";
 
 
 const Filter = () =>{

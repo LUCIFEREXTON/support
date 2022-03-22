@@ -4,7 +4,6 @@ import Attachment from './Attachment'
 import { useSelector } from 'react-redux'
 const ConversationItem = ({source, conversation}) => {
 	const name = useSelector( state => state.user.name)
-  console.log(conversation.id);
   return(
     <div className={`conversation ${source?'user':'support'}`}>
 			<div className="conv-header">
@@ -33,7 +32,7 @@ const ConversationItem = ({source, conversation}) => {
 								<>
 									<div style={{"display": "flex"}}>
 										{conversation?.custom_fields?.cf_blog_uri?.length 
-										? <span style={{"margin-right": "5px", "font-weight": "bold"}}>Links of the Blog that you shared with us are:</span>
+										? <span style={{marginRight: "5px", fontWeight: "bold"}}>Links of the Blog that you shared with us are:</span>
 										: <span></span>
 										}
 										{conversation?.custom_fields?.cf_blog_uri}
