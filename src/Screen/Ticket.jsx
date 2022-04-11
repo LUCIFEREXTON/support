@@ -1,5 +1,6 @@
 import axios from "axios";
-import { useState, useEffect, useCallback, useRef } from 'react'
+import React from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import ConversationGroup from "../Components/Tickets/ConversationGroup";
 import "bootstrap-icons/font/bootstrap-icons.css";
@@ -22,26 +23,28 @@ const Ticket = () => {
   let statusValue = ''
   let statusChangeButton = ''
   if( ticket?.status === 5 ){
-    statusValue =  <span className="badge bg-red ticket-status">Status Closed</span> 
+    statusValue =  <span className="badge bg-red align-self-center">Status Closed</span> 
   }else{
-    statusValue =  <span className="badge bg-green ticket-status">Status Open</span>
+    statusValue =  <span className="badge bg-green align-self-center">Status Open</span>
   }          
   if( ticket?.status === 5 ){
-    statusChangeButton =  <button type="button" className="btn bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(2)}><strong>Reopen Ticket</strong></button>
+    statusChangeButton =  <div className="btn bg-secondry-bv text-light" onClick={() => statusChangeHandler(2)}><strong>Reopen Ticket</strong></div>
   }else{
-    statusChangeButton =  <button type="button" className="btn bg-secondry-bv text-light pull-right" onClick={() => statusChangeHandler(5)}><strong>Ticket Resolve</strong></button>
+    statusChangeButton =  <div className="btn bg-secondry-bv text-light" onClick={() => statusChangeHandler(5)}><strong>Ticket Resolve</strong></div>
   }
 
   const statusChangeHandler = async(status) => {
     try{
-      axios.put(`/tickets/${id}`, { status })
+			axios.put(`/ticket/update/${id}`, { status })
       .then(res => {
         setticket({...res.data})
         dispatch({type:'UPDATE_STATUS', ticket: {...res.data}})
       })
-      .catch(error => console.log(error))
-    }catch(e){
-      console.log(e)
+      .catch(error=>{
+        dispatch({type:'ERROR', error: error.response.data.message})
+      })
+    }catch(error){
+      dispatch({type:'ERROR', error: error.response.data.message})
     }
   }
 
@@ -49,11 +52,10 @@ const Ticket = () => {
     if(editorState.getCurrentContent().getPlainText()!==''){
       let formData = new FormData();
       formData.append( "body", draftToHtml(convertToRaw(editorState.getCurrentContent())));
-      formData.append("private", false);
-      formData.append("notify_emails[]", "ajaykanyal11@gmail.com");
+      formData.append("agent_id", ticket.responder_id);
       formData.append("user_id", ticket.requester_id);
       files.forEach(file => formData.append("attachments[]",file));
-      axios.post(`/tickets/${id}/notes`, formData, {
+			axios.post(`/ticket/reply/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -65,7 +67,9 @@ const Ticket = () => {
         changeFiles([])
         formRef.current.reset()
       })
-      .catch(error => console.log(error));
+      .catch(error=>{
+        dispatch({type:'ERROR', error: error.response.data.message})
+      })
     }
   }
 
@@ -84,14 +88,15 @@ const Ticket = () => {
 
   return(
     <>
-      <div className="modal-header bg-primary-bv text-light">
-        <div className="ticket-header">
-        <h4 className="modal-title"><i className="fa fa-cog"></i> {ticket?.subject} [#{ticket?.id}] {statusValue}</h4>
-        <div className="buttons">
-          <div className="nav-links pull-right">
-            {statusChangeButton}
-          </div>
+      <div className="modal-header bg-primary-bv text-light" id='viewTicket'>
+        <div className="d-flex">
+          <h4 className="modal-title me-2">{ticket?.subject} [#{ticket?.id}]</h4>
+          {statusValue}
         </div>
+        <div>
+          {(ticket?.status === 5)
+          ?<div className="btn bg-secondry-bv text-light" onClick={() => statusChangeHandler(2)}><strong>Reopen Ticket</strong></div>
+          :<div className="btn bg-secondry-bv text-light" onClick={() => statusChangeHandler(5)}><strong>Ticket Resolve</strong></div>}
         </div>
       </div>
       <div className='modal-body'>

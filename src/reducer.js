@@ -10,20 +10,34 @@ const initialState = {
 	closetickets: 0,
 	selectedTicketId: null,
   conversationList: [],
+  ticketPage: 1,
+  currentFilter: '2',
+  allfetched:false,
+  ticket_per_page: 14,
+  ticket: {},
+  errormsg: '',
   folderList: [],
   articles: [],
   filterArticles: [],
-  article: {},
-  ticketPage: 1,
-  allfetched:false,
-  ticket_per_page: 14,
-  ticket: {}
+  article: {}
 }
 
 const ticket_open_status = [2, 3, 4]
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'SET_PER_PAGE':{
+      return {
+        ...state,
+				ticket_per_page: action.per_page || 14
+      }
+    }
+    case 'ERROR':{
+      return {
+        ...state,
+				errormsg: action.error || 'Can\'t Connect to Server' 
+      }
+    }
     case 'UPDATE_PAGE_NUMBER':{
       return {
         ...state,
@@ -67,7 +81,7 @@ const reducer = (state = initialState, action) => {
       }
     }
     case 'UPDATE_STATUS':{
-      if( action.ticket.status === 5){
+      if( action.ticket.status === 5 && state.currentFilter !== '2'){
         return {
           ...state,
           ticket: {...action.ticket},
@@ -80,13 +94,14 @@ const reducer = (state = initialState, action) => {
         ...state,
         tickets: [action.ticket, ...state.tickets.filter(ticket => ticket.id !== action.ticket.id)],
         filterList: [action.ticket, ...state.filterList.filter(ticket => ticket.id !== action.ticket.id)],
-        opentickets: state.opentickets + 1
+        opentickets: action.ticket.status === 5 ? state.opentickets - 1 : state.opentickets + 1
       }
     }
     case 'CHANGE_FILTER_LIST':{
       return {
         ...state,
-        filterList: action.filterList
+        filterList: action.filterList,
+        currentFilter: action.currentFilter
       }
     }
     case 'SHOW_TICKET':{

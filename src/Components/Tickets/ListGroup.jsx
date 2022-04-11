@@ -1,4 +1,5 @@
 import ListItem from './ListItem'
+import React from 'react'
 import { useSelector }from 'react-redux'
 
 const ListGroup = ()=>{
@@ -9,6 +10,7 @@ const ListGroup = ()=>{
         <ListItem 
           key={ticket.id} 
           id={ticket.id} 
+					user_id={ticket.requester_id}
           subject={ticket.subject} 
           status={ticket.status} 
           createdAt={ticket.created_at} 

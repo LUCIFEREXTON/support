@@ -2,6 +2,7 @@ import axios from "axios";
 import Article from "./Article"
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import React from 'react'
 
 const Folder = ({ id, name })=>{
   const [articleList, setArticleList] = useState([]);

@@ -1,4 +1,5 @@
 import FullArticle from "./FullArticle";
+import React from 'react'
 import SearchedArticles from "./SearchedArticles";
 import { Routes, Route } from "react-router-dom";
 import AllCategorries from "./AllCategorries";

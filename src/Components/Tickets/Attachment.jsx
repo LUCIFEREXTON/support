@@ -1,4 +1,5 @@
 import { nicesize } from '../../helperFunction'
+import React from 'react'
 const Attachment = ({file}) =>{
   const type = file.name.split('.').pop()
   return(

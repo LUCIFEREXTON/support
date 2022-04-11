@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+import React from 'react'
+
 const Article = ({ article }) =>{
   const articles = useSelector(state => state.articles);
   const dispatch = useDispatch();
