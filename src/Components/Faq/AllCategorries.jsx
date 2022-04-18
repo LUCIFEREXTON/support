@@ -1,6 +1,7 @@
 import axios from "axios";
 import Category from "./Category"
 import { useState, useEffect } from "react";
+import React from 'react'
 
 const AllCategorries = ()=>{
   const [categoryList, setCategoryList] = useState([])

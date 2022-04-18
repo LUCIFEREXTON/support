@@ -1,9 +1,9 @@
 import ConversationItem from './ConversationItem'
+import React from 'react'
 
 const ConversationGroup = ({ user_id, conversationList })=>{
-  
   return (
-    <div className='row support-content-comment'>
+    <div className='support-content-comment overflow-auto'>
         {conversationList.map(conversation=>(
             <ConversationItem 
               key={conversation.id}

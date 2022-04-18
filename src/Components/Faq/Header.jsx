@@ -1,8 +1,11 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import React from 'react'
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios'
 import TicketBtn from './TicketBtn';
+import Modal from '../Modal'
+import CreateTicket from '../../Screen/CreateTicket'
 const Header = () => {
   const [search, changeSearch] = useState('');
   let articles = useSelector(state => state.articles);
@@ -47,9 +50,18 @@ const Header = () => {
         </div>
         <div className="ticketbtns">
           <TicketBtn to='/' link_text='All Issues' icon='info'/>
-          <TicketBtn to='/ticket/new' link_text='Create Ticket' icon='plus'/>
+          <div className="ticketbtn">
+            <div className="faqicon">
+              <i className='fa fa-plus' aria-hidden="true"></i>
+            </div>
+            <div data-toggle='modal' data-target="#newTicketModal">Create Ticket</div>
+          </div>
+          {/* <TicketBtn to='/ticket/new' link_text='Create Ticket' icon='plus'/> */}
           {pathname!=='/faq' &&<TicketBtn to='/faq' link_text='To FAQs' icon='backward'/>}
         </div>
+        <Modal id='newTicketModal'>
+          <CreateTicket/>
+        </Modal>
       </div>
   )
 }

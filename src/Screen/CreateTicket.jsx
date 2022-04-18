@@ -1,33 +1,30 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import React from 'react'
 import axios from "axios";
-import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw } from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import draftToHtml from 'draftjs-to-html';
 
 const CreateTicket = () =>{
   const [subject, changeSubject] = useState('');
-  const [description, changeDescription] = useState('');
   const [files, changeFiles] = useState([]);
   const [blogURI, changeBlogURI] = useState([]);
-  const urilist = ["https://blogvault.net", "https://google.com", "https://amazon.in","https://youtube.com"];
-  const [filteredURI, changefilteredURIList] = useState([...urilist.slice(0,Math.min(urilist.length,5))]);
+  const [urilist, seturilist] = useState([])
+  const [filteredURI, changefilteredURIList] = useState([]);
   const [dropdown, setDropdown] = useState(false);
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
   const formRef = useRef();
   const fileUploadRef = useRef();
   const containerRef = useRef();
-  const email = useSelector(state => state.user.email);
   const inputURIRef = useRef();
 	const dispatch = useDispatch()
-  const navigate = useNavigate()
   const onSubjectChange = event => {
     changeSubject(event.target.value);
   }
 
-  const onDescriptionChange = event => {
-    changeDescription(event.target.value);
-  }
-
   const onFilesChange = event => {
-    console.log(event.target.files);
     changeFiles([...files, ...event.target.files]);
     formRef.current.reset();
   }
@@ -36,34 +33,36 @@ const CreateTicket = () =>{
 
   const initialValue = () => {
     changeSubject('');
-    changeDescription('');
+    setEditorState(() => EditorState.createEmpty())
     changeFiles([]);
     changeBlogURI([]);
     formRef.current.reset();
   }
 
   const onTicketCreate = () => {
-    let formData = new FormData();
+		if(subject && subject !== '' && editorState.getCurrentContent().getPlainText()!==''){
+			let formData = new FormData();
     formData.append( "subject", subject);
-    formData.append("description", description);
-    formData.append("email", email);
-    formData.append("priority", 1);
-    formData.append("status", 2);
+    formData.append("description", draftToHtml(convertToRaw(editorState.getCurrentContent())));
     formData.append("custom_fields[cf_blog_uri]", blogURI.join("\n"));
     files.forEach(file => formData.append("attachments[]",file));
-    axios.post(`/tickets`, formData, {
+		axios.post(`/ticket/create`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     })
       .then(res => {
         dispatch({type:'CREATE_TICKET', ticket: res.data})
+				initialValue();
       })
-      .catch(error => console.log(error));
-  }
+      .catch(error=>{
+        dispatch({type:'ERROR', error: error.response.data.message})
+      })
+
+		}
+	}
   const createClickhandler = () =>{
     onTicketCreate();
-    initialValue();
   }
   const changeURIFilter = (inputText) => {
     let filteruri = [...urilist.filter(uri => uri.includes(inputText))];
@@ -87,17 +86,29 @@ const CreateTicket = () =>{
   const removeSelectedFile = (fileName) => {
     changeFiles([...files.filter(file => file.name !== fileName)]);
   }
+
+	useEffect(()=>{
+		(async()=>{
+			try{
+				const res = await axios.get('/ticket/blog_uri_list')
+				seturilist([...res.data.blog_uri_list])
+				changefilteredURIList([...res.data.blog_uri_list].slice(0,Math.min(res.data.blog_uri_list.length,5)))
+			}catch(error){
+        dispatch({type:'ERROR', error: error.response.data.message})
+      }
+		})()
+	},[dispatch])
+
   return(
-    <div 
-      className="container view-ticket" 
+    <div
+      className="modal-dialog modal-dialog-centered"
       onClick={(event) => {
         if(containerRef.current && !containerRef.current.contains(event.target)) { 
-          setDropdown(false);
-        }
-      }}>
-      <div className='modal-header bg-primary-bv text-light pos-rel'>
+        setDropdown(false);
+      }
+    }}>
+      <div className='modal-header bg-primary-bv text-light pos-rel new-ticket-header'>
         <h4 className='modal-title'><i className='fa fa-pencil'></i> Create New Issue</h4>
-        <div onClick={()=>{navigate(-1)}} className="btn bg-secondry-bv text-light pull-right pos-abs top-right-10"> Back </div>
       </div>
       <div className='modal-body'>
           <div className='form-group'>
@@ -146,7 +157,14 @@ const CreateTicket = () =>{
             }
           </div>
           <div className="form-group">
-            <textarea name="description" className="form-control" value={description} placeholder="Please detail your issue or question" style={{height: '120px'}} onChange={onDescriptionChange}/>
+            <Editor
+              name="description"
+              className="form-control"
+              placeholder="Please detail your issue or question"
+              editorState={editorState}
+              onEditorStateChange={setEditorState}
+            />
+            {/* <textarea name="description" className="form-control" value={description} placeholder="Please detail your issue or question" style={{height: '120px'}} onChange={onDescriptionChange}/> */}
           </div>          
         <form ref={formRef}>
           <div className="mb-3 form-group">

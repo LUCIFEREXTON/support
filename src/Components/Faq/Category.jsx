@@ -1,6 +1,7 @@
 import axios from "axios";
 import Folder from "./Folder"
 import { useState, useEffect } from "react";
+import React from 'react'
 const Category = ({ id, name })=>{
   const [folderList, setFolderList] = useState([]);
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import React from 'react'
 const TicketBtn = ({to, link_text, icon}) => {
   return(
     <div className="ticketbtn">

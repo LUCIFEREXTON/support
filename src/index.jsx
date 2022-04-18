@@ -1,16 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+// Run this example by adding <%= javascript_pack_tag 'hello_react' %> to the head of your layout file,
+// like app/views/layouts/application.html.erb. All it does is render <div>Hello React</div> at the bottom
+// of the page.
+
+import React from 'react'
+import ReactDOM from 'react-dom'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+//bootstrap
+import './custom_bootstrap.scss'
+import $ from 'jquery';
+import Popper from 'popper.js';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
 //redux
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import reducer from './reducer';
 import axios from 'axios';
 import { composeWithDevTools } from "redux-devtools-extension";
-axios.defaults.baseURL = process.env.REACT_APP_FRESHDESK_BASE_URL;
-axios.defaults.headers.common['Authorization'] = process.env.REACT_APP_FRESHDESK_API_KEY
+const token = document.querySelector('[name=csrf-token]')?.content;
+axios.defaults.baseURL = "http://localhost:3000/api/v1/freshdesk";
+axios.defaults.headers.common['X-CSRF-TOKEN'] = token
 const store = createStore(reducer, composeWithDevTools());
 
 ReactDOM.render(
@@ -19,9 +29,8 @@ ReactDOM.render(
       <App />
     </React.StrictMode>
   </Provider>,
-  document.getElementById('root')
-);
-
+	document.body.appendChild(document.createElement('div')),
+)
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

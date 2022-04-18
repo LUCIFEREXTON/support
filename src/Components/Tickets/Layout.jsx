@@ -1,19 +1,18 @@
+import React from 'react'
+import { useSelector } from 'react-redux';
+import Toast from './Toast'
 const Layout = ({children}) =>{
+	const msg = useSelector( state => state.errormsg)
   return(
-    <div className='container'>
-			<section className='content'>
-				<div className='row'>
-					<div className='col-md-12'>
-						<div className='grid support-content bg-primary-bv'>
-							<div className='grid-body'>
-                {children}
-							</div>
-						</div>
-					</div>
+		<div className='container'>
+			{msg!=='' && <Toast msg={msg}/>}
+			<div className='grid support-content bg-primary-bv'>
+				<div className='grid-body'>
+					{children}
 				</div>
-			</section>
+			</div>
 		</div>
   );
 }
 
-export default Layout;
+export default Layout
