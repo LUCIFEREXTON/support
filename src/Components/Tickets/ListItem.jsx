@@ -2,39 +2,20 @@ import { formatDate } from '../../helperFunction.js'
 import React from 'react'
 import axios from 'axios'
 import { useDispatch } from "react-redux";
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link} from 'react-router-dom';
 
 const ListItem = ({id, user_id, status, subject, createdAt, updatedAt}) => {
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   const navigate = useNavigate()
-  const pathname = useLocation().pathname
+  // const pathname = useLocation().pathname
   let statusValue = ''
   if( status === 5 ){
-    statusValue =  <span className="badge bg-danger float-end">Success</span>
+    statusValue =  <span className="badge bg-danger float-end">Closed</span>
   }else{
-    statusValue =  <span className="badge bg-success float-end">Success</span> }
-  
-  const fetchConversation = () => {
-    axios.get(`/tickets/${id}/conversations`)
-    .then(res => dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...res.data]}))
-    .catch(error => console.log(error));
-  }
-
+    statusValue =  <span className="badge bg-success float-end">Open</span> }
   
   const handleClick = () => {
-    (
-      async () => {
-        try {
-					const res = await axios.post(`/ticket/read`,{ user_id, id})
-					const { conversationList, ...ticket} = res.data
-					dispatch({type:'SAVE_TICKET', ticket: {...ticket}})
-					dispatch({type:'UPDATE_CONVERSATIONS', conversationList: [...conversationList]})
-          navigate('view')
-        } catch (error) {
-          dispatch({type:'ERROR', error: error.response.data.message})
-        }
-      }
-		)()
+    navigate(`view/${user_id}/${id}`)
 	}
 
   return(

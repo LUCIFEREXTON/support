@@ -41,7 +41,7 @@ const MainPage = () =>{
 				}
 			/>
 			<Route
-				path='/view'
+				path='/view/:user_id/:id'
 				element={
 					<Ticket />
 				}
